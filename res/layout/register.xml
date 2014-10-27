@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <EditText 
+            android:id="@+id/user_verify_password"
+            android:layout_marginTop="10dp"
+            android:layout_width="fill_parent"
+            android:hint="确认密码"
+            android:singleLine="true"
+            android:inputType="textPassword"
+            android:layout_height="40dp"
+            android:background="@drawable/launcher_button_background_unpressed"/>
+    
+    <EditText 
+            android:id="@+id/sms_verify"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/user_verify_password"
+            android:layout_width="fill_parent"
+            android:hint="短信验证码"
+            android:singleLine="true"
+            android:inputType="number"
+            android:layout_toLeftOf="@+id/sms_verify_button"
+            android:layout_marginRight="5dp"
+            android:layout_height="40dp"
+            android:background="@drawable/launcher_button_background_unpressed"/>
+
+    <Button
+        android:id="@+id/sms_verify_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignBaseline="@+id/sms_verify"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/launcher_button_background"
+        android:text="发送验证码" />
+
+</RelativeLayout>

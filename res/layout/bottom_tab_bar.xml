@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_tab_bar_background"
+        android:gravity="center" >
+
+        <LinearLayout
+            android:id="@+id/bottom_tab_bar_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+            
+            <LinearLayout 
+                android:id="@+id/arrange_order"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                
+                <ImageView 
+                    android:id="@+id/arrange_order_imageview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:drawable/ic_menu_add"/>
+                
+                <TextView
+                    android:id="@+id/arrange_order_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="11dp"
+                    android:text="配送订单" />
+
+            </LinearLayout>
+            
+            <LinearLayout 
+                android:id="@+id/person_center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                
+                <ImageView 
+                    android:id="@+id/person_center_imageview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:drawable/ic_menu_edit"/>
+                
+                <TextView
+                    android:id="@+id/person_center_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="11dp"
+                    android:text="个人中心" />
+
+            </LinearLayout>
+            
+      </LinearLayout>
+      
+    </LinearLayout>

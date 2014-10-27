@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry exported="true" kind="lib" path="/home/retropoktan/我的Android专用资源和框架/android-async-http-1.4.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/retropoktan/我的Android专用资源和框架/core-3.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/home/retropoktan/我的Android专用资源和框架/GreenDao/greendao-1.3.7.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>

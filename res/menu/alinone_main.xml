@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:Alinone="http://schemas.android.com/apk/res-auto">  
+  
+    <item  
+        android:id="@+id/scan_qr_code_from_action_bar"  
+        android:icon="@android:drawable/ic_menu_camera"  
+        Alinone:showAsAction="always"  
+        android:title="扫一扫"/>  
+        
+</menu> 

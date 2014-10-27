@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/logo_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:typeface="sans"
+        android:text="Alinone" />
+    
+    <LinearLayout 
+        android:id="@+id/login_chart"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="130dp"
+        android:orientation="vertical">
+        
+        <EditText 
+            android:id="@+id/user_account"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:hint="手机号码"
+            android:singleLine="true"
+            android:inputType="number"
+            android:background="@drawable/launcher_button_background_unpressed"/>
+        
+        <EditText 
+            android:id="@+id/user_password"
+            android:layout_marginTop="10dp"
+            android:layout_width="fill_parent"
+            android:hint="密码"
+            android:singleLine="true"
+            android:inputType="textPassword"
+            android:layout_height="40dp"
+            android:background="@drawable/launcher_button_background_unpressed"/>
+                    
+        </LinearLayout>
+        
+        <LinearLayout 
+            android:id="@+id/launcher_buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_chart"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            
+            <Button 
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:text="登录"
+                android:background="@drawable/launcher_button_background"/>
+            
+            <Button 
+                android:id="@+id/register_button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:text="注册"
+                android:background="@drawable/launcher_button_background"/>
+            
+        </LinearLayout>
+        
+        <TextView 
+            android:id="@+id/forget_password_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/launcher_buttons"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="忘记密码"/>
+    
+</RelativeLayout>
