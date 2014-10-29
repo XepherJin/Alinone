@@ -1091,20 +1091,21 @@ containing a value of this type.
         public static final int progress_hud_bg=0x7f02005c;
         public static final int progressbar_mini=0x7f02005d;
         public static final int qr_scan_line=0x7f02005e;
-        public static final int scan_order_and_bind_merchant=0x7f02005f;
-        public static final int spinner_0=0x7f020060;
-        public static final int spinner_1=0x7f020061;
-        public static final int spinner_10=0x7f020062;
-        public static final int spinner_11=0x7f020063;
-        public static final int spinner_2=0x7f020064;
-        public static final int spinner_3=0x7f020065;
-        public static final int spinner_4=0x7f020066;
-        public static final int spinner_5=0x7f020067;
-        public static final int spinner_6=0x7f020068;
-        public static final int spinner_7=0x7f020069;
-        public static final int spinner_8=0x7f02006a;
-        public static final int spinner_9=0x7f02006b;
-        public static final int task_process_dialog_background=0x7f02006c;
+        public static final int refresh=0x7f02005f;
+        public static final int scan_order_and_bind_merchant=0x7f020060;
+        public static final int spinner_0=0x7f020061;
+        public static final int spinner_1=0x7f020062;
+        public static final int spinner_10=0x7f020063;
+        public static final int spinner_11=0x7f020064;
+        public static final int spinner_2=0x7f020065;
+        public static final int spinner_3=0x7f020066;
+        public static final int spinner_4=0x7f020067;
+        public static final int spinner_5=0x7f020068;
+        public static final int spinner_6=0x7f020069;
+        public static final int spinner_7=0x7f02006a;
+        public static final int spinner_8=0x7f02006b;
+        public static final int spinner_9=0x7f02006c;
+        public static final int task_process_dialog_background=0x7f02006d;
     }
     public static final class id {
         public static final int action_bar=0x7f09001c;
@@ -1161,22 +1162,27 @@ containing a value of this type.
         public static final int login_chart=0x7f09004d;
         public static final int logo_textview=0x7f090055;
         public static final int main_layout=0x7f09003c;
-        public static final int message=0x7f09005f;
+        public static final int merchant_name_text_view=0x7f090060;
+        public static final int message=0x7f090063;
         public static final int middle=0x7f090018;
         public static final int never=0x7f090012;
         public static final int new_password=0x7f09004a;
         public static final int none=0x7f090019;
         public static final int normal=0x7f090007;
+        public static final int order_num_textview=0x7f090061;
         public static final int person_center=0x7f090047;
         public static final int person_center_container=0x7f09005c;
         public static final int person_center_imageview=0x7f090048;
+        public static final int person_center_listview=0x7f09005e;
+        public static final int person_center_listview_item=0x7f09005f;
         public static final int person_center_textview=0x7f090049;
         public static final int progress_circular=0x7f090004;
         public static final int progress_horizontal=0x7f090005;
         public static final int radio=0x7f09002f;
+        public static final int refresh_from_action_bar=0x7f090068;
         public static final int register_button=0x7f09005a;
         public static final int return_button=0x7f09004e;
-        public static final int scan_qr_code_from_action_bar=0x7f090064;
+        public static final int scan_qr_code_from_action_bar=0x7f090069;
         public static final int search_badge=0x7f090032;
         public static final int search_bar=0x7f090031;
         public static final int search_button=0x7f090033;
@@ -1191,13 +1197,13 @@ containing a value of this type.
         public static final int showCustom=0x7f09000b;
         public static final int showHome=0x7f09000c;
         public static final int showTitle=0x7f09000d;
-        public static final int sms_verify=0x7f090062;
-        public static final int sms_verify_button=0x7f090063;
+        public static final int sms_verify=0x7f090066;
+        public static final int sms_verify_button=0x7f090067;
         public static final int sms_verify_for_new_password=0x7f09004b;
-        public static final int spinnerImageView=0x7f09005e;
+        public static final int spinnerImageView=0x7f090062;
         public static final int split_action_bar=0x7f09001e;
         public static final int submit_area=0x7f090039;
-        public static final int surfaceview=0x7f090060;
+        public static final int surfaceview=0x7f090064;
         public static final int tabMode=0x7f090008;
         public static final int title=0x7f09002b;
         public static final int top_action_bar=0x7f090020;
@@ -1206,7 +1212,7 @@ containing a value of this type.
         public static final int user_account=0x7f090056;
         public static final int user_password=0x7f090057;
         public static final int user_verify_password=0x7f090053;
-        public static final int viewfinderview=0x7f090061;
+        public static final int viewfinderview=0x7f090065;
         public static final int withText=0x7f090013;
     }
     public static final class integer {
@@ -1266,10 +1272,11 @@ containing a value of this type.
         public static final int forget_password=0x7f03001c;
         public static final int launcher_activity=0x7f03001d;
         public static final int person_center=0x7f03001e;
-        public static final int progress_hud=0x7f03001f;
-        public static final int qr_code_capture=0x7f030020;
-        public static final int register=0x7f030021;
-        public static final int support_simple_spinner_dropdown_item=0x7f030022;
+        public static final int person_center_listview_item=0x7f03001f;
+        public static final int progress_hud=0x7f030020;
+        public static final int qr_code_capture=0x7f030021;
+        public static final int register=0x7f030022;
+        public static final int support_simple_spinner_dropdown_item=0x7f030023;
     }
     public static final class menu {
         public static final int alinone_main=0x7f0c0000;

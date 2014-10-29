@@ -39,7 +39,7 @@ public class MerchantDao extends AbstractDao<Merchant, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'MERCHANT' (" + //
-                "'_id' INTEGER PRIMARY KEY ," + // 0: id
+                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "'MERCHANT_ID' TEXT NOT NULL ," + // 1: merchantID
                 "'MERCHANT_NAME' TEXT NOT NULL ," + // 2: merchantName
                 "'ORDER_NUM' INTEGER NOT NULL );"); // 3: orderNum

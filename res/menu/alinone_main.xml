@@ -1,10 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" 
     xmlns:Alinone="http://schemas.android.com/apk/res-auto">  
-  
+    
+    <item 
+        android:id="@+id/refresh_from_action_bar"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="刷新信息"
+        Alinone:showAsAction="always"/>
+    
     <item  
         android:id="@+id/scan_qr_code_from_action_bar"  
         android:icon="@android:drawable/ic_menu_camera"  
         Alinone:showAsAction="always"  
         android:title="扫一扫"/>  
-        
+
 </menu> 

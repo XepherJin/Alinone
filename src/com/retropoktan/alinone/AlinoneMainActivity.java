@@ -32,6 +32,8 @@ public class AlinoneMainActivity extends ActionBarActivity {
 	private TextView arrangeOrderTextView;
 	private TextView personCenterTextView;
 	
+	private int index;
+	
 	private LinearLayout arrangeOrderLinearLayout;
 	private LinearLayout personCenterLinearLayout;
 	
@@ -43,6 +45,7 @@ public class AlinoneMainActivity extends ActionBarActivity {
 		initTextView();
 		initImageView();
 		initBottomTabBar();
+		index = 0;
 		setTabSelection(0);
 		checkUser();
 	}
@@ -96,6 +99,10 @@ public class AlinoneMainActivity extends ActionBarActivity {
 		}
 	}
 	
+	private int getCurrentTabSelection() {
+		return index;
+	}
+	
 	class BottomBarOnClickListener implements OnClickListener {
 
 		@Override
@@ -117,6 +124,7 @@ public class AlinoneMainActivity extends ActionBarActivity {
 	
 	private void setTabSelection(int index) {
 		clearTabSelection();
+		this.index = index;
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		hideFragments(fragmentTransaction);
 		switch (index) {

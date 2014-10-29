@@ -47,7 +47,7 @@
             android:theme="@style/Theme.AppCompat.Light"
             android:parentActivityName=".AlinoneMainActivity"
             android:screenOrientation="portrait"
-            android:label="扫描订单">
+            android:label="二维码扫描">
         </activity>
         <activity 
             android:name=".ForgetPasswordActivity"

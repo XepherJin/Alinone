@@ -194,6 +194,7 @@ public class LauncherActivity extends Activity{
 							public void onSuccess(int statusCode,
 									Header[] headers, JSONObject response) {
 								try {
+									Log.v("status", response.toString());
 									if (response.get("status").toString().equals("1")) {
 										progressHUD.dismiss();
 										JSONObject jsonObject = new JSONObject(response.get("body").toString());
@@ -210,6 +211,10 @@ public class LauncherActivity extends Activity{
 									else if (response.get("status").toString().equals("4")) {
 										progressHUD.dismiss();
 										Toast.makeText(LauncherActivity.this, "帐号或密码错误", Toast.LENGTH_SHORT).show();
+									}
+									else {
+										progressHUD.dismiss();
+										Toast.makeText(LauncherActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
 									}
 								} catch (JSONException e) {
 									// TODO: handle exception

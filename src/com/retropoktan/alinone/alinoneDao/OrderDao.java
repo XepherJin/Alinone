@@ -41,7 +41,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'ORDER' (" + //
-                "'_id' INTEGER PRIMARY KEY ," + // 0: id
+                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "'ORDER_ID' TEXT NOT NULL ," + // 1: orderID
                 "'OBJECT_PHONE' TEXT NOT NULL ," + // 2: objectPhone
                 "'ORDER_ADDRESS' TEXT NOT NULL ," + // 3: orderAddress
