@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Base64;
+import android.util.Log;
 
 import com.retropoktan.alinone.alinoneDao.Constants;
 import com.retropoktan.alinone.alinoneDao.DaoMaster;
@@ -61,11 +63,15 @@ public class BaseApplication extends Application{
 	}
 	
 	public String getPassword() {
-		if (password == null) {
+		if (this.password == null) {
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-			password = sharedPreferences.getString(PASSWORD, null);
+			String password = new String(Base64.decode(sharedPreferences.getString(PASSWORD, ""), Base64.URL_SAFE));
+			return password;
 		}
-		return password;
+		else {
+			String password = new String(Base64.decode(this.password, Base64.URL_SAFE));
+			return password;
+		}
 	}
 	
 	public String getToken() {
@@ -100,8 +106,8 @@ public class BaseApplication extends Application{
 		if (password != null) {
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
 			SharedPreferences.Editor editor = sharedPreferences.edit();
-			if (editor.putString(PASSWORD, password).commit()) {
-				this.password = password;
+			if (editor.putString(PASSWORD, Base64.encodeToString(password.getBytes(), Base64.URL_SAFE)).commit()) {
+				this.password = Base64.encodeToString(password.getBytes(), Base64.URL_SAFE);
 			}
 		}
 	}

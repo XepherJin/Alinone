@@ -1,26 +1,34 @@
 package com.retropoktan.alinone;
 
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.Header;
+import org.apache.http.entity.StringEntity;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.retropoktan.alinone.netutil.HttpUtil;
-
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class AlinoneMainActivity extends ActionBarActivity {
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.retropoktan.alinone.netutil.HttpUtil;
+import com.retropoktan.alinone.netutil.URLConstants;
+
+public class AlinoneMainActivity extends ActionBarActivity{
 
 	private FragmentManager fragmentManager;
 	private ArrangeOrderFragment arrangeOrderFragment;
@@ -28,6 +36,8 @@ public class AlinoneMainActivity extends ActionBarActivity {
 	
 	private ImageView arrangeOrderImageView;
 	private ImageView personCenterImageView;
+	
+	private long mExitTime;
 	
 	private TextView arrangeOrderTextView;
 	private TextView personCenterTextView;
@@ -46,8 +56,10 @@ public class AlinoneMainActivity extends ActionBarActivity {
 		initImageView();
 		initBottomTabBar();
 		index = 0;
-		setTabSelection(0);
-		checkUser();
+		setTabSelection(index);
+		if (getIntent().getExtras() == null) {
+			checkUser();
+		}
 	}
 
 	@Override
@@ -90,12 +102,50 @@ public class AlinoneMainActivity extends ActionBarActivity {
 		
 	}
 	
+	
 	private void checkUser() {
 		try {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("username", BaseApplication.getInstance().getPhoneNum());
-		} catch (Exception e) {
+			jsonObject.put("password", BaseApplication.getInstance().getPassword());
+			StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+			HttpUtil.post(AlinoneMainActivity.this, URLConstants.LoginUrl, stringEntity, URLConstants.ContentTypeJson,new JsonHttpResponseHandler() {
+
+				@Override
+				public void onFailure(int statusCode,
+						Header[] headers, Throwable throwable,
+						JSONObject errorResponse) {
+					// TODO Auto-generated method stub
+					Toast.makeText(AlinoneMainActivity.this, "获取信息出错", Toast.LENGTH_SHORT).show();
+				}
+
+				@Override
+				public void onSuccess(int statusCode,
+						Header[] headers, JSONObject response) {
+					try {
+						Log.v("status", response.toString());
+						if (response.get("status").toString().equals("1")) {
+							JSONObject jsonObject = new JSONObject(response.get("body").toString());
+							BaseApplication.getInstance().setToken(jsonObject.get("private_token").toString());
+						}
+						else {
+							Intent intent = new Intent(AlinoneMainActivity.this, LauncherActivity.class);
+							BaseApplication.getInstance().setToken("");
+							startActivity(intent);
+							AlinoneMainActivity.this.finish();
+						}
+					} catch (JSONException e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
+			});
+		} catch (JSONException e) {
 			// TODO: handle exception
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	
@@ -122,6 +172,14 @@ public class AlinoneMainActivity extends ActionBarActivity {
 		
 	}
 	
+	
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		checkUser();
+	}
+
 	private void setTabSelection(int index) {
 		clearTabSelection();
 		this.index = index;
@@ -165,5 +223,22 @@ public class AlinoneMainActivity extends ActionBarActivity {
 		if (personCenterFragment != null) {
 			fragmentTransaction.hide(personCenterFragment);
 		}
+	}
+	
+	//点击两次back退出应用
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if ((System.currentTimeMillis() - mExitTime) > 2000) {
+				Toast.makeText(AlinoneMainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            	mExitTime = System.currentTimeMillis();
+            }
+			else {
+				AlinoneMainActivity.this.finish();
+			}
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

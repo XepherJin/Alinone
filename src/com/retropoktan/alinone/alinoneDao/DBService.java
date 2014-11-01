@@ -8,7 +8,7 @@ import android.content.Context;
 
 public class DBService {
 
-	private static  DBService instance;
+	private static DBService instance;
 	private static Context appContext;
 	private DaoSession mDaoSession;
 	private OrderDao orderDao;
@@ -70,5 +70,50 @@ public class DBService {
 	
 	public void deleteOrder(Order order) {
 		orderDao.delete(order);
+	}
+	
+	public Merchant loadMerchant(long id) {
+		return merchantDao.load(id);
+	}
+	
+	public List<Merchant> loadAllMerchants() {
+		return merchantDao.loadAll();
+	}
+	
+	public List<Merchant> queryMerchant(String where, String... params) {
+		return merchantDao.queryRaw(where, params);
+	}
+	
+	public long saveMerchant(Merchant merchant) {
+		return merchantDao.insertOrReplace(merchant);
+	}
+	
+	public void saveMerchantLists(final List<Merchant> list) {
+		if (list == null || list.isEmpty()) {
+			return;
+		}
+		orderDao.getSession().runInTx(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				for (int i = 0; i < list.size(); i++) {
+					Merchant merchant = list.get(i);
+					merchantDao.insertOrReplace(merchant);
+				}
+			}
+		});
+	}
+	
+	public void deleteAllMerchants() {
+		merchantDao.deleteAll();
+	}
+	
+	public void deleteMerchant(long id) {
+		merchantDao.deleteByKey(id);
+	}
+	
+	public void deleteMerchant(Merchant merchant) {
+		merchantDao.delete(merchant);
 	}
 }

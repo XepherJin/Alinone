@@ -148,7 +148,6 @@ public class ForgetPasswordActivity extends Activity implements OnClickListener{
 					progressHUD = ProgressHUD.show(ForgetPasswordActivity.this, "更改密码中", true);
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put("phone", phoneNum);
-					Log.v("aaaaaaaaaaaaaaa", phoneNum);
 					jsonObject.put("verify_code", smsFeedBack.getText().toString().trim());
 					jsonObject.put("new_password", passwordAgain.getText().toString().trim());
 					StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));

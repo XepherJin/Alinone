@@ -28,6 +28,8 @@ import android.view.WindowManager;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.retropoktan.alinone.alinoneDao.DBService;
+import com.retropoktan.alinone.alinoneDao.Order;
 import com.retropoktan.alinone.qrcode.camera.CameraManager;
 import com.retropoktan.alinone.qrcode.decode.CaptureActivityHandler;
 import com.retropoktan.alinone.qrcode.decode.InactivityTimer;
@@ -37,6 +39,10 @@ import com.retropoktan.alinone.qrcode.view.ViewfinderView;
 public class ScanQRCodeActivity extends Activity implements Callback {
 
 	public static final String QR_RESULT = "RESULT";
+	
+	private DBService dbService;
+	
+	private String qrCodeID;
 
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -55,6 +61,8 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		dbService = DBService.getInstance(getApplicationContext());
 		/*
 		 * this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		 * WindowManager.LayoutParams.FLAG_FULLSCREEN);// 去掉信息栏
@@ -205,14 +213,14 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 
 	private void showResult(final Result rawResult, Bitmap barcode) {
 		
-		
-
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		Drawable drawable = new BitmapDrawable(barcode);
 		builder.setIcon(drawable);
+		
+		qrCodeID = rawResult.getText();
 
-		builder.setTitle("类型:" + rawResult.getBarcodeFormat() + "\n 结果：" + rawResult.getText());
+		builder.setTitle("类型:" + rawResult.getBarcodeFormat() + "\n 结果：" + qrCodeID);
 		builder.setPositiveButton("确定", new OnClickListener() {
 
 			@Override
@@ -300,6 +308,14 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	private void getQRCodeInfo(String string) {
+		String orderID = string;
+		String time = string.substring(0, 8);
+		String platform = string.substring(8, 10);
+		String merchantID = string.substring(10, 18);
+		String autoIncrementID = string.substring(18, 22);
 	}
 
 }

@@ -57,7 +57,7 @@ public class LauncherActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		if (BaseApplication.getInstance().getToken() != null) {
+		if (BaseApplication.getInstance().getToken() != null && !BaseApplication.getInstance().getToken().equals("")) {
 			startActivity(new Intent(LauncherActivity.this, AlinoneMainActivity.class));
 			LauncherActivity.this.finish();
 		}
@@ -136,8 +136,11 @@ public class LauncherActivity extends Activity{
 											Log.v("json", response.toString());
 											JSONObject jsonObject = new JSONObject(response.get("body").toString());
 											BaseApplication.getInstance().setToken(jsonObject.get("private_token").toString());
+											BaseApplication.getInstance().setPassword(userPassword.getText().toString());
+											BaseApplication.getInstance().setUserId(userAccount.getText().toString());
 											BaseApplication.getInstance().setPhoneNum(userAccount.getText().toString().trim());
 											Intent intent = new Intent(LauncherActivity.this, AlinoneMainActivity.class);
+											intent.putExtra("activity_name", LauncherActivity.class.getSimpleName());
 											startActivity(intent);
 											LauncherActivity.this.finish();
 										}
@@ -173,61 +176,69 @@ public class LauncherActivity extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (isSignUp == 0) {
-					try {
-						progressHUD = ProgressHUD.show(LauncherActivity.this, "登录中", true);
-						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("username", userAccount.getText().toString().trim());
-						jsonObject.put("password", userPassword.getText().toString().trim());
-						StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
-						HttpUtil.post(LauncherActivity.this, URLConstants.LoginUrl, stringEntity, URLConstants.ContentTypeJson,new JsonHttpResponseHandler() {
+					if (userAccount.getText().toString().trim().length() != 11) {
+						Toast.makeText(LauncherActivity.this, "请正确填写手机号码", Toast.LENGTH_SHORT).show();
+					}
+					else {
+						try {
+							progressHUD = ProgressHUD.show(LauncherActivity.this, "登录中", true);
+							JSONObject jsonObject = new JSONObject();
+							jsonObject.put("username", userAccount.getText().toString().trim());
+							jsonObject.put("password", userPassword.getText().toString().trim());
+							StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+							HttpUtil.post(LauncherActivity.this, URLConstants.LoginUrl, stringEntity, URLConstants.ContentTypeJson,new JsonHttpResponseHandler() {
 
-							@Override
-							public void onFailure(int statusCode,
-									Header[] headers, Throwable throwable,
-									JSONObject errorResponse) {
-								// TODO Auto-generated method stub
-								progressHUD.dismiss();
-								Toast.makeText(LauncherActivity.this, "连接超时", Toast.LENGTH_SHORT).show();
-							}
-
-							@Override
-							public void onSuccess(int statusCode,
-									Header[] headers, JSONObject response) {
-								try {
-									Log.v("status", response.toString());
-									if (response.get("status").toString().equals("1")) {
-										progressHUD.dismiss();
-										JSONObject jsonObject = new JSONObject(response.get("body").toString());
-										BaseApplication.getInstance().setToken(jsonObject.get("private_token").toString());
-										BaseApplication.getInstance().setPhoneNum(userAccount.getText().toString().trim());
-										Intent intent = new Intent(LauncherActivity.this, AlinoneMainActivity.class);
-										startActivity(intent);
-										LauncherActivity.this.finish();
-									}
-									else if (response.get("status").toString().equals("7")) {
-										progressHUD.dismiss();
-										Toast.makeText(LauncherActivity.this, "该帐号不存在", Toast.LENGTH_SHORT).show();
-									}
-									else if (response.get("status").toString().equals("4")) {
-										progressHUD.dismiss();
-										Toast.makeText(LauncherActivity.this, "帐号或密码错误", Toast.LENGTH_SHORT).show();
-									}
-									else {
-										progressHUD.dismiss();
-										Toast.makeText(LauncherActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
-									}
-								} catch (JSONException e) {
-									// TODO: handle exception
-									e.printStackTrace();
+								@Override
+								public void onFailure(int statusCode,
+										Header[] headers, Throwable throwable,
+										JSONObject errorResponse) {
+									// TODO Auto-generated method stub
+									progressHUD.dismiss();
+									Toast.makeText(LauncherActivity.this, "连接超时", Toast.LENGTH_SHORT).show();
 								}
-							}
-						});
-					} catch (JSONException e) {
-						// TODO: handle exception
-						e.printStackTrace();
-					} catch (UnsupportedEncodingException e) {
-						// TODO: handle exception
-						e.printStackTrace();
+
+								@Override
+								public void onSuccess(int statusCode,
+										Header[] headers, JSONObject response) {
+									try {
+										Log.v("status", response.toString());
+										if (response.get("status").toString().equals("1")) {
+											progressHUD.dismiss();
+											JSONObject jsonObject = new JSONObject(response.get("body").toString());
+											BaseApplication.getInstance().setToken(jsonObject.get("private_token").toString());
+											BaseApplication.getInstance().setPhoneNum(userAccount.getText().toString().trim());
+											BaseApplication.getInstance().setPassword(userPassword.getText().toString().trim());
+											BaseApplication.getInstance().setUserId(userAccount.getText().toString().trim());
+											Intent intent = new Intent(LauncherActivity.this, AlinoneMainActivity.class);
+											intent.putExtra("activity_name", LauncherActivity.class.getSimpleName());
+											startActivity(intent);
+											LauncherActivity.this.finish();
+										}
+										else if (response.get("status").toString().equals("7")) {
+											progressHUD.dismiss();
+											Toast.makeText(LauncherActivity.this, "该帐号不存在", Toast.LENGTH_SHORT).show();
+										}
+										else if (response.get("status").toString().equals("4")) {
+											progressHUD.dismiss();
+											Toast.makeText(LauncherActivity.this, "帐号或密码错误", Toast.LENGTH_SHORT).show();
+										}
+										else {
+											progressHUD.dismiss();
+											Toast.makeText(LauncherActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+										}
+									} catch (JSONException e) {
+										// TODO: handle exception
+										e.printStackTrace();
+									}
+								}
+							});
+						} catch (JSONException e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						} catch (UnsupportedEncodingException e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
 					}
 				}
 				else {
@@ -277,7 +288,6 @@ public class LauncherActivity extends Activity{
 			userPassword.requestFocus();
 		}
 	}
-
 
 	class TimeCount extends CountDownTimer{
 
