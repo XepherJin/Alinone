@@ -2,7 +2,9 @@ package com.retropoktan.alinone;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -16,7 +18,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,6 +57,8 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	// private static final float BEEP_VOLUME = 0.10f;
 	private boolean vibrate;
 	CameraManager cameraManager;
+	
+	private ArrayList<String> qrCodeList = new ArrayList<String>();
 
 	/** Called when the activity is first created. */
 	@Override
@@ -343,7 +346,21 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 			.show();
 		}
 		else {
-			
+			if (!qrCodeList.contains(orderID)) {
+				qrCodeList.add(orderID);
+				new AlertDialog.Builder(getApplicationContext())
+				.setTitle("识别成功")
+				.setMessage("已成功扫描！")
+				.setNegativeButton("继续扫描", null)
+				.show();
+			}
+			else {
+				new AlertDialog.Builder(getApplicationContext())
+				.setTitle("识别成功")
+				.setMessage("已扫描过该订单！")
+				.setNegativeButton("扫描下一个", null)
+				.show();
+			}
 		}
 	}
 

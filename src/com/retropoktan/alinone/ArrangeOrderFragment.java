@@ -1,5 +1,7 @@
 package com.retropoktan.alinone;
 
+import com.retropoktan.alinone.alinoneDao.DBService;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,12 +14,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ArrangeOrderFragment extends Fragment{
 
 	private Button addOrderButton;
 	private ListView currentOrderListView;
-	private Button commitAllOrdersButton;
+	private DBService dbService;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -28,14 +32,13 @@ public class ArrangeOrderFragment extends Fragment{
 		return arrangeOrderLayout;
 	}
 
-	@Override 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
+		setHasOptionsMenu(true);
+		dbService = DBService.getInstance(getActivity().getApplicationContext());
 	}
-
-
 
 	private void initButton(View parentView) {
 		addOrderButton = (Button)parentView.findViewById(R.id.add_order_button);
@@ -48,7 +51,6 @@ public class ArrangeOrderFragment extends Fragment{
 				startActivity(intent);
 			}
 		});
-		commitAllOrdersButton = (Button)parentView.findViewById(R.id.commit_all_orders);
 	}
 	
 	private void initListView(View parentView) {
@@ -70,7 +72,12 @@ public class ArrangeOrderFragment extends Fragment{
 			startActivity(intent);
 			break;
 		case R.id.commit_all_orders:
-			commitAllOrdersButton.setEnabled(false);
+			if (addOrderButton.getVisibility() == View.GONE) {
+				
+			}
+			else {
+				Toast.makeText(getActivity().getApplicationContext(), "当前暂无订单提交", Toast.LENGTH_SHORT);
+			}
 			break;
 		default:
 			break;
