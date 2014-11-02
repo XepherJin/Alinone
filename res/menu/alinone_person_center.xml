@@ -8,7 +8,7 @@
         Alinone:showAsAction="always"/>
     
     <item  
-        android:id="@+id/scan_qr_code_from_action_bar"  
+        android:id="@+id/scan_qr_code_from_person_center"  
         android:icon="@android:drawable/ic_menu_camera"  
         Alinone:showAsAction="always"  
         android:title="扫一扫"/>  

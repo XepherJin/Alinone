@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ public class ArrangeOrderFragment extends Fragment{
 
 	private Button addOrderButton;
 	private ListView currentOrderListView;
-	
+	private Button commitAllOrdersButton;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class ArrangeOrderFragment extends Fragment{
 				startActivity(intent);
 			}
 		});
+		commitAllOrdersButton = (Button)parentView.findViewById(R.id.commit_all_orders);
 	}
 	
 	private void initListView(View parentView) {
@@ -56,8 +58,24 @@ public class ArrangeOrderFragment extends Fragment{
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
-		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.alinone_arrange_order, menu);
 	}
-	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case R.id.scan_qr_code_from_arrange_order:
+			Intent intent = new Intent(getActivity().getApplicationContext(), ScanQRCodeActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.commit_all_orders:
+			commitAllOrdersButton.setEnabled(false);
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 	
 }

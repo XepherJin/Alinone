@@ -1,25 +1,26 @@
 package com.retropoktan.alinone;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -29,7 +30,6 @@ import android.view.WindowManager;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.retropoktan.alinone.alinoneDao.DBService;
-import com.retropoktan.alinone.alinoneDao.Order;
 import com.retropoktan.alinone.qrcode.camera.CameraManager;
 import com.retropoktan.alinone.qrcode.decode.CaptureActivityHandler;
 import com.retropoktan.alinone.qrcode.decode.InactivityTimer;
@@ -185,7 +185,6 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		hasSurface = false;
-
 	}
 
 	public CameraManager getCameraManager() {
@@ -213,6 +212,22 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 
 	private void showResult(final Result rawResult, Bitmap barcode) {
 		
+		qrCodeID = rawResult.getText();
+		
+		if (qrCodeID.length() == 22) {
+			getQRCodeInfo(qrCodeID);
+		}
+		else if (qrCodeID.length() == 18) {
+			getQRCodeInfo(qrCodeID);
+		}
+		else {
+			new AlertDialog.Builder(getApplicationContext())
+			.setTitle("识别错误")
+			.setMessage("非法订单或商家二维码！")
+			.setNegativeButton("重新扫描", null)
+			.show();
+		}
+		/*
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		Drawable drawable = new BitmapDrawable(barcode);
@@ -247,6 +262,8 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 		// intent.putExtra(QR_RESULT, rawResult.getText());
 		// setResult(RESULT_OK, intent);
 		// finish();
+		 * 
+		 */
 	}
 
 	public void restartPreviewAfterDelay(long delayMS) {
@@ -316,6 +333,41 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 		String platform = string.substring(8, 10);
 		String merchantID = string.substring(10, 18);
 		String autoIncrementID = string.substring(18, 22);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+		String date = simpleDateFormat.format(new Date());
+		if (!time.equals(date)) {
+			new AlertDialog.Builder(getApplicationContext())
+			.setTitle("识别错误")
+			.setMessage("二维码已过期！")
+			.setNegativeButton("重新扫描", null)
+			.show();
+		}
+		else {
+			
+		}
 	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.alinone_qrcode, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case R.id.save_qrcode_info:
+			
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
 
 }

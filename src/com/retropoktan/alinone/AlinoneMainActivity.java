@@ -15,8 +15,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -60,28 +58,6 @@ public class AlinoneMainActivity extends ActionBarActivity{
 		if (getIntent().getExtras() == null) {
 			checkUser();
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.alinone_main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		switch (item.getItemId()) {
-		case R.id.scan_qr_code_from_action_bar:
-			Intent intent = new Intent(AlinoneMainActivity.this, ScanQRCodeActivity.class);
-			startActivity(intent);
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 	
 	private void initBottomTabBar() {
@@ -171,7 +147,6 @@ public class AlinoneMainActivity extends ActionBarActivity{
 		}
 		
 	}
-	
 	
 	@Override
 	protected void onRestart() {

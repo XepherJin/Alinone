@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:Alinone="http://schemas.android.com/apk/res-auto">  
+    
+    <item  
+        android:id="@+id/save_qrcode_info"  
+        android:icon="@drawable/tick"  
+        android:showAsAction="always"  
+        android:title="完成扫描订单"/>  
+
+</menu> 

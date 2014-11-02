@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -152,6 +154,13 @@ public class PersonCenterFragment extends Fragment{
 		}
 		
 	}
+	
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// TODO Auto-generated method stub
+		inflater.inflate(R.menu.alinone_person_center, menu);
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -160,7 +169,9 @@ public class PersonCenterFragment extends Fragment{
 		case R.id.refresh_from_action_bar:
 			getMerchantInfo();
 			break;
-
+		case R.id.scan_qr_code_from_person_center:
+			Intent intent = new Intent(getActivity().getApplicationContext(), ScanQRCodeActivity.class);
+			startActivity(intent);
 		default:
 			break;
 		}

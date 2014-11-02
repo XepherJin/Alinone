@@ -1091,21 +1091,21 @@ containing a value of this type.
         public static final int progress_hud_bg=0x7f02005c;
         public static final int progressbar_mini=0x7f02005d;
         public static final int qr_scan_line=0x7f02005e;
-        public static final int refresh=0x7f02005f;
-        public static final int scan_order_and_bind_merchant=0x7f020060;
-        public static final int spinner_0=0x7f020061;
-        public static final int spinner_1=0x7f020062;
-        public static final int spinner_10=0x7f020063;
-        public static final int spinner_11=0x7f020064;
-        public static final int spinner_2=0x7f020065;
-        public static final int spinner_3=0x7f020066;
-        public static final int spinner_4=0x7f020067;
-        public static final int spinner_5=0x7f020068;
-        public static final int spinner_6=0x7f020069;
-        public static final int spinner_7=0x7f02006a;
-        public static final int spinner_8=0x7f02006b;
-        public static final int spinner_9=0x7f02006c;
-        public static final int task_process_dialog_background=0x7f02006d;
+        public static final int scan_order_and_bind_merchant=0x7f02005f;
+        public static final int spinner_0=0x7f020060;
+        public static final int spinner_1=0x7f020061;
+        public static final int spinner_10=0x7f020062;
+        public static final int spinner_11=0x7f020063;
+        public static final int spinner_2=0x7f020064;
+        public static final int spinner_3=0x7f020065;
+        public static final int spinner_4=0x7f020066;
+        public static final int spinner_5=0x7f020067;
+        public static final int spinner_6=0x7f020068;
+        public static final int spinner_7=0x7f020069;
+        public static final int spinner_8=0x7f02006a;
+        public static final int spinner_9=0x7f02006b;
+        public static final int task_process_dialog_background=0x7f02006c;
+        public static final int tick=0x7f02006d;
     }
     public static final class id {
         public static final int action_bar=0x7f09001c;
@@ -1135,6 +1135,7 @@ containing a value of this type.
         public static final int change_password_buttons=0x7f09004c;
         public static final int checkbox=0x7f09002d;
         public static final int collapseActionView=0x7f090010;
+        public static final int commit_all_orders=0x7f090068;
         public static final int content=0x7f09003d;
         public static final int current_order_listview=0x7f090042;
         public static final int default_activity_button=0x7f090028;
@@ -1179,10 +1180,12 @@ containing a value of this type.
         public static final int progress_circular=0x7f090004;
         public static final int progress_horizontal=0x7f090005;
         public static final int radio=0x7f09002f;
-        public static final int refresh_from_action_bar=0x7f090068;
+        public static final int refresh_from_action_bar=0x7f09006a;
         public static final int register_button=0x7f09005a;
         public static final int return_button=0x7f09004e;
-        public static final int scan_qr_code_from_action_bar=0x7f090069;
+        public static final int save_qrcode_info=0x7f09006c;
+        public static final int scan_qr_code_from_arrange_order=0x7f090069;
+        public static final int scan_qr_code_from_person_center=0x7f09006b;
         public static final int search_badge=0x7f090032;
         public static final int search_bar=0x7f090031;
         public static final int search_button=0x7f090033;
@@ -1279,7 +1282,9 @@ containing a value of this type.
         public static final int support_simple_spinner_dropdown_item=0x7f030023;
     }
     public static final class menu {
-        public static final int alinone_main=0x7f0c0000;
+        public static final int alinone_arrange_order=0x7f0c0000;
+        public static final int alinone_person_center=0x7f0c0001;
+        public static final int alinone_qrcode=0x7f0c0002;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
