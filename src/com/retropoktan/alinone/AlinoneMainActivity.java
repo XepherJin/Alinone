@@ -7,9 +7,12 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.retropoktan.alinone.GPS.GPSService;
 import com.retropoktan.alinone.netutil.HttpUtil;
 import com.retropoktan.alinone.netutil.URLConstants;
 
@@ -45,9 +49,14 @@ public class AlinoneMainActivity extends ActionBarActivity{
 	private LinearLayout arrangeOrderLinearLayout;
 	private LinearLayout personCenterLinearLayout;
 	
+	private Intent intent;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		openGPSSettings();
+		intent = new Intent(AlinoneMainActivity.this, GPSService.class);
+		startService(intent);
 		setContentView(R.layout.activity_alinone_main);
 		fragmentManager = getSupportFragmentManager();
 		initTextView();
@@ -77,8 +86,24 @@ public class AlinoneMainActivity extends ActionBarActivity{
 		personCenterImageView = (ImageView)findViewById(R.id.person_center_imageview);
 		
 	}
+
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(arg0, arg1, arg2);
+	}
 	
-	
+	private void openGPSSettings() {
+        LocationManager alm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        if (alm.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+            return;
+        }
+        Toast.makeText(this, "请开启GPS！", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(intent,0); //此为设置完成后返回到获取界面
+
+    }
+
 	private void checkUser() {
 		try {
 			JSONObject jsonObject = new JSONObject();
@@ -216,4 +241,12 @@ public class AlinoneMainActivity extends ActionBarActivity{
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		stopService(intent);
+	}
+	
 }

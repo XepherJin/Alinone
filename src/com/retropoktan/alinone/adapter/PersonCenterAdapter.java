@@ -20,13 +20,11 @@ public class PersonCenterAdapter extends BaseAdapter{
 
 	public static final String TAG = PersonCenterAdapter.class.getSimpleName();
 	public List<Merchant> merchantListData;
-	public Context context;
 	public LayoutInflater inflater;
 	
 	public PersonCenterAdapter(List<Merchant> merchantListData, Context context) {
 		super();
 		this.merchantListData = merchantListData;
-		this.context = context;
 		inflater = LayoutInflater.from(context);
 	}
 

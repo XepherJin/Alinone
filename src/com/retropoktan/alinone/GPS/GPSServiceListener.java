@@ -1,46 +1,39 @@
 package com.retropoktan.alinone.GPS;
 
-import java.util.GregorianCalendar;
-
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.retropoktan.alinone.BaseApplication;
 import com.retropoktan.alinone.netutil.HttpUtil;
 import com.retropoktan.alinone.netutil.URLConstants;
 
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.os.Bundle;
-
 public class GPSServiceListener implements LocationListener{
 
 	private static final String TAG = GPSServiceListener.class.getSimpleName();
-	private static final float minAccuracyMeters = 35;
 	private float latitude;
 	private float longitude;
 	private Context context;
 	
-	
-	
-	public GPSServiceListener(Context context) {
-		super();
-		// TODO Auto-generated constructor stub
-		this.context = context;
-	}
-
+	public int GPSCurrentStatus;
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
+		Log.d("gps", latitude + "" + longitude + "");
 		if (location != null) {
-			if (location.hasAccuracy() && location.getAccuracy() <= minAccuracyMeters) {
+			latitude = (float)location.getLatitude();
+			longitude = (float)location.getLongitude();
 				try {
-					latitude = (float)location.getLatitude();
-					longitude = (float)location.getLongitude();
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put("lng", longitude);
 					jsonObject.put("lat", latitude);
@@ -59,13 +52,23 @@ public class GPSServiceListener implements LocationListener{
 						public void onSuccess(int statusCode, Header[] headers,
 								JSONObject response) {
 							// TODO Auto-generated method stub
+							try {
+								Log.v("status", response.toString());
+								if (response.get("status").toString().equals("3")) {
+									JSONArray orderArray = ((JSONObject)response.get("body")).getJSONArray("orders_id");
+									for (int i = 0; i < orderArray.length(); i++) {
+										
+									}
+								}
+							} catch (JSONException e) {
+								// TODO: handle exception
+								e.printStackTrace();
+							}
 						}
 						
 					});
 				} catch (Exception e) {
 					// TODO: handle exception
-				}
-			
 			}
 		}
 	}
@@ -85,7 +88,7 @@ public class GPSServiceListener implements LocationListener{
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
-		
+		GPSCurrentStatus = status;
 	}
 
 }

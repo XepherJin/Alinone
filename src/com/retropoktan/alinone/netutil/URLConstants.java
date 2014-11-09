@@ -12,6 +12,7 @@ public class URLConstants {
 	public static final String BindMerchantUrl = ApiUrl + "/sender/bind_merchant";
 	public static final String UnBindMerchantUrl = ApiUrl + "/sender/unbind_merchant";
 	public static final String BindOrdersUrl = ApiUrl + "/sender/bind_orders";
+	public static final String OrderInfoUrl = ApiUrl + "/website/search";
 	public static final String FinishOrdersUrl = ApiUrl + "/sender/finish_orders";
 	public static final String GPSUploadUrl = ApiUrl + "/sender/gps_renew";
 	public static final String PersonInfoUrl = ApiUrl + "/sender/info";

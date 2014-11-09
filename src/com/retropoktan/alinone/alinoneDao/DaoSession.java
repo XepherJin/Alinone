@@ -17,36 +17,36 @@ import de.greenrobot.dao.internal.DaoConfig;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig orderDaoConfig;
+    private final DaoConfig alinoneOrderDaoConfig;
     private final DaoConfig merchantDaoConfig;
 
-    private final OrderDao orderDao;
+    private final AlinoneOrderDao alinoneOrderDao;
     private final MerchantDao merchantDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
 
-        orderDaoConfig = daoConfigMap.get(OrderDao.class).clone();
-        orderDaoConfig.initIdentityScope(type);
+        alinoneOrderDaoConfig = daoConfigMap.get(AlinoneOrderDao.class).clone();
+        alinoneOrderDaoConfig.initIdentityScope(type);
 
         merchantDaoConfig = daoConfigMap.get(MerchantDao.class).clone();
         merchantDaoConfig.initIdentityScope(type);
 
-        orderDao = new OrderDao(orderDaoConfig, this);
+        alinoneOrderDao = new AlinoneOrderDao(alinoneOrderDaoConfig, this);
         merchantDao = new MerchantDao(merchantDaoConfig, this);
 
-        registerDao(Order.class, orderDao);
+        registerDao(AlinoneOrder.class, alinoneOrderDao);
         registerDao(Merchant.class, merchantDao);
     }
     
     public void clear() {
-        orderDaoConfig.getIdentityScope().clear();
+        alinoneOrderDaoConfig.getIdentityScope().clear();
         merchantDaoConfig.getIdentityScope().clear();
     }
 
-    public OrderDao getOrderDao() {
-        return orderDao;
+    public AlinoneOrderDao getAlinoneOrderDao() {
+        return alinoneOrderDao;
     }
 
     public MerchantDao getMerchantDao() {

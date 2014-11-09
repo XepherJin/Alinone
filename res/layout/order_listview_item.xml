@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/person_center_listview_item"
+        android:id="@+id/arrange_order_listview_item"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -13,19 +13,20 @@
         android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/merchant_name_text_view"
+                android:id="@+id/address_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:textSize="18sp"
-                android:text="商家名称"/>
+                android:text="派送地址"/>
 
             <TextView
-                android:id="@+id/order_num_textview"
+                android:id="@+id/phone_number_textview"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="累计派送 0 单"/>
+                android:textSize="18sp"
+                android:text="联系电话"/>
 
     </LinearLayout>
 

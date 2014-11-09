@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,6 +55,10 @@ public class PersonCenterFragment extends Fragment{
 	
 	private List<Merchant> merchantList;
 	
+	private List<String> qrcodeList = new ArrayList<String>();
+	
+	private int REQUEST_CODE = 1;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -82,7 +87,7 @@ public class PersonCenterFragment extends Fragment{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(getActivity().getApplicationContext(), ScanQRCodeActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, REQUEST_CODE);
 			}
 		});
 	}
@@ -155,6 +160,11 @@ public class PersonCenterFragment extends Fragment{
 		
 	}
 	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+			
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -171,13 +181,13 @@ public class PersonCenterFragment extends Fragment{
 			break;
 		case R.id.scan_qr_code_from_person_center:
 			Intent intent = new Intent(getActivity().getApplicationContext(), ScanQRCodeActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, REQUEST_CODE);
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void getMerchantInfo() {
 		try {
 			JSONObject jsonObject = new JSONObject();
@@ -208,6 +218,9 @@ public class PersonCenterFragment extends Fragment{
 								merchantList.add(merchant);
 								dbService.saveMerchant(merchant);
 							}
+							if (merchantList.size() > 0) {
+								bindMerchantButton.setVisibility(View.GONE);
+							}
 							adapter.notifyDataSetChanged();
 						}
 						else {
@@ -229,11 +242,14 @@ public class PersonCenterFragment extends Fragment{
 		for (Merchant merchant : dbService.loadAllMerchants()) {
 			merchantList.add(merchant);
 		}
-		adapter = new PersonCenterAdapter(merchantList, getActivity());
-		merchantListView.setAdapter(adapter);
-		merchantListView.setOnItemClickListener(new MerchantListOnItemCLickListener());
 		if (merchantList.size() <= 0) {
 			bindMerchantButton.setVisibility(View.VISIBLE);
 		}
+		else {
+			bindMerchantButton.setVisibility(View.GONE);
+		}
+		adapter = new PersonCenterAdapter(merchantList, getActivity());
+		merchantListView.setAdapter(adapter);
+		merchantListView.setOnItemClickListener(new MerchantListOnItemCLickListener());
 	}
 }

@@ -93,44 +93,49 @@ public class ForgetPasswordActivity extends Activity implements OnClickListener{
 		case R.id.find_password_button:
 			//http request
 			try {
-				progressHUD = ProgressHUD.show(ForgetPasswordActivity.this, "正在发送验证码短信", true);
-				JSONObject jsonObject = new JSONObject();
-				phoneNum = phoneNumAndNewPassword.getText().toString().trim();
-				jsonObject.put("phone", phoneNum);
-				StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
-				HttpUtil.post(ForgetPasswordActivity.this, URLConstants.SMSForgetUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler() {
+				if (phoneNumAndNewPassword.getText().toString().trim().length() != 11) {
+					Toast.makeText(getApplicationContext(), "请正确输入手机号码", Toast.LENGTH_SHORT).show();
+				}
+				else {
+					progressHUD = ProgressHUD.show(ForgetPasswordActivity.this, "正在发送验证码短信", true);
+					JSONObject jsonObject = new JSONObject();
+					phoneNum = phoneNumAndNewPassword.getText().toString().trim();
+					jsonObject.put("phone", phoneNum);
+					StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+					HttpUtil.post(ForgetPasswordActivity.this, URLConstants.SMSForgetUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler() {
 
-					@Override
-					public void onFailure(int statusCode, Header[] headers,
-							Throwable throwable, JSONObject errorResponse) {
-						// TODO Auto-generated method stub
-						progressHUD.dismiss();
-						Toast.makeText(ForgetPasswordActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
-						}
+						@Override
+						public void onFailure(int statusCode, Header[] headers,
+								Throwable throwable, JSONObject errorResponse) {
+							// TODO Auto-generated method stub
+							progressHUD.dismiss();
+							Toast.makeText(ForgetPasswordActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
+							}
 
-					@Override
-					public void onSuccess(int statusCode, Header[] headers,
-							JSONObject response) {
-						// TODO Auto-generated method stub
-						try {
-							if (response.get("status").toString().equals("1")) {
-								Log.v("smsback", response.toString());
-								progressHUD.dismiss();
-								changePasswordLayout.setVisibility(View.VISIBLE);
-								smsButton.setVisibility(view.GONE);
-								phoneNumAndNewPassword.setText("");
-								phoneNumAndNewPassword.setHint("新密码");
-								forgetPasswordTitle.setText("验证短信已发送，请输入验证码和新密码");
+						@Override
+						public void onSuccess(int statusCode, Header[] headers,
+								JSONObject response) {
+							// TODO Auto-generated method stub
+							try {
+								if (response.get("status").toString().equals("1")) {
+									Log.v("smsback", response.toString());
+									progressHUD.dismiss();
+									changePasswordLayout.setVisibility(View.VISIBLE);
+									smsButton.setVisibility(view.GONE);
+									phoneNumAndNewPassword.setText("");
+									phoneNumAndNewPassword.setHint("新密码");
+									forgetPasswordTitle.setText("验证短信已发送，请输入验证码和新密码");
+								}
+								else {
+									progressHUD.dismiss();
+									Toast.makeText(ForgetPasswordActivity.this, "该号码不存在", Toast.LENGTH_SHORT).show();
+								}
+							} catch (JSONException e) {
+								// TODO: handle exception
 							}
-							else {
-								progressHUD.dismiss();
-								Toast.makeText(ForgetPasswordActivity.this, "该号码不存在", Toast.LENGTH_SHORT).show();
-							}
-						} catch (JSONException e) {
-							// TODO: handle exception
 						}
-					}
-				});
+					});
+				}
 			} catch (JSONException e) {
 				// TODO: handle exception
 			} catch (UnsupportedEncodingException e) {
