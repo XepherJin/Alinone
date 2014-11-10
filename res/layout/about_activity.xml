@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <ImageView
+        android:id="@+id/alinone_logo"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_alignTop="@+id/logo_textview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/ic_launcher" />
+    
+    <TextView
+        android:id="@+id/alinone_logo_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alinone_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:typeface="sans"
+        android:textColor="@android:color/black"
+        android:text="Alinone" />
+    
+    <TextView
+        android:id="@+id/alinone_logo_version_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alinone_logo_textview"
+        android:layout_centerHorizontal="true"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:typeface="sans"
+        android:text="v1.0" />
+    
+    <LinearLayout 
+        android:id="@+id/about_chart"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alinone_logo_version_textview"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/launcher_button_background_unpressed"
+        android:orientation="vertical">
+        
+        <TextView 
+            android:id="@+id/check_for_update"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/black"
+            android:gravity="center_vertical"
+            android:textSize="17dp"
+            android:text="检查更新"/>
+        
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#999999"/>
+        
+        <TextView 
+            android:id="@+id/change_new_password_from_about_textview"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:textSize="17dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/black"
+            android:gravity="center_vertical"
+            android:text="修改密码"/>
+            
+        </LinearLayout>
+
+    <LinearLayout 
+        android:id="@+id/change_password_chart"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+        
+        <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/launcher_button_background_unpressed"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+        
+        <EditText
+            android:id="@+id/old_password_from_about"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:singleLine="true"
+            android:inputType="textPassword"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:hint="原密码"/>
+        
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#999999"/>
+        
+        <EditText
+            android:id="@+id/password_to_change_from_about"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:inputType="textPassword"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:singleLine="true"
+            android:hint="新密码"/>
+        
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#999999"/>
+        
+        <EditText
+            android:id="@+id/verify_password_to_change_from_about"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:inputType="textPassword"
+            android:background="@null"
+            android:singleLine="true"
+            android:hint="确认密码"/>
+
+        </LinearLayout>
+        
+        <Button 
+            android:id="@+id/change_new_password_from_about_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="更改密码"
+            android:background="@drawable/launcher_button_background"
+            android:textColor="@android:color/black"/>
+        
+    </LinearLayout>
+</RelativeLayout>     

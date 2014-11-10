@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:Alinone="http://schemas.android.com/apk/res-auto">  
+    
+    <item 
+        android:id="@+id/change_password_from_actionbar"
+        android:title="修改密码"
+        Alinone:showAsAction="never"/>
+    
+    <item  
+        android:id="@+id/exit_from_actionbar"  
+        Alinone:showAsAction="never"  
+        android:title="退出登录"/>  
+
+</menu> 

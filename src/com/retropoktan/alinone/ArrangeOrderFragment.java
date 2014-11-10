@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.http.Header;
+import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,9 +30,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.retropoktan.alinone.adapter.OrderListAdapter;
 import com.retropoktan.alinone.alinoneDao.AlinoneOrder;
 import com.retropoktan.alinone.alinoneDao.DBService;
+import com.retropoktan.alinone.netutil.HttpUtil;
+import com.retropoktan.alinone.netutil.URLConstants;
 
 public class ArrangeOrderFragment extends Fragment{
 
@@ -139,7 +147,38 @@ public class ArrangeOrderFragment extends Fragment{
 			break;
 		case R.id.commit_all_orders:
 			if (addOrderButton.getVisibility() == View.GONE) {
-				dbService.deleteAllOrders();
+				try {
+					JSONObject jsonObject = new JSONObject();
+					JSONArray jsonArray = new JSONArray();
+					for (AlinoneOrder alinoneOrder : orderList) {
+						JSONObject jsonObjectInside = new JSONObject();
+						jsonObjectInside.put("order_id", alinoneOrder.getOrderID());
+						jsonArray.put(jsonObjectInside);
+					}
+					jsonObject.put("orders_id", jsonArray);
+					jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+					StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+					HttpUtil.post(getActivity().getApplicationContext(), URLConstants.FinishOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+						@Override
+						public void onFailure(int statusCode, Header[] headers,
+								Throwable throwable, JSONObject errorResponse) {
+							// TODO Auto-generated method stub
+							super.onFailure(statusCode, headers, throwable, errorResponse);
+						}
+
+						@Override
+						public void onSuccess(int statusCode, Header[] headers,
+								JSONObject response) {
+							// TODO Auto-generated method stub
+							super.onSuccess(statusCode, headers, response);
+						}
+						
+					});
+					dbService.deleteAllOrders();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 			else {
 				Toast.makeText(getActivity().getApplicationContext(), "当前暂无订单提交", Toast.LENGTH_SHORT);

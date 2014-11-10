@@ -61,6 +61,13 @@
             android:screenOrientation="portrait"
             android:label="忘记密码">
         </activity>
+        <activity 
+            android:name=".AboutActivity"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:parentActivityName=".AlinoneMainActivity"
+            android:screenOrientation="portrait"
+            android:label="关于">
+        </activity>
         <service 
             android:enabled="true"
             android:name="com.retropoktan.alinone.GPS.GPSService">

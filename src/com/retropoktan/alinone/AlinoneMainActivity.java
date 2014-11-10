@@ -18,6 +18,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -103,6 +106,36 @@ public class AlinoneMainActivity extends ActionBarActivity{
         startActivityForResult(intent,0); //此为设置完成后返回到获取界面
 
     }
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.alinone_main_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case R.id.change_password_from_actionbar:
+			Intent changePasswordIntent = new Intent(AlinoneMainActivity.this, AboutActivity.class);
+			startActivity(changePasswordIntent);
+			break;
+		case R.id.exit_from_actionbar:
+			BaseApplication.getInstance().setPhoneNum("");
+			BaseApplication.getInstance().setPassword("");
+			BaseApplication.getInstance().setUserId("");
+			Intent intent = new Intent(AlinoneMainActivity.this, LauncherActivity.class);
+			startActivity(intent);
+			AlinoneMainActivity.this.finish();
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 	private void checkUser() {
 		try {
