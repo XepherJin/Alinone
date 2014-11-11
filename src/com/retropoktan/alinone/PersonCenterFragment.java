@@ -163,7 +163,9 @@ public class PersonCenterFragment extends Fragment{
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-			
+			if (resultCode == Activity.RESULT_OK) {
+				readMerchantInfo();
+			}
 	}
 
 	@Override

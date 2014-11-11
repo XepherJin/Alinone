@@ -260,8 +260,31 @@ public class LauncherActivity extends Activity{
 					Toast.makeText(LauncherActivity.this, "手机号码错误", Toast.LENGTH_SHORT).show();
 				}
 				else {
+					Toast.makeText(LauncherActivity.this, "正在向您发送验证短信，请稍候", Toast.LENGTH_SHORT).show();
 					timeCount.start();
-					//http sms verify request
+					try {
+						JSONObject jsonObject = new JSONObject();
+						jsonObject.put("phone", userAccount.getText().toString().trim());
+						StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+						HttpUtil.post(LauncherActivity.this, URLConstants.SMSRegisterUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+							@Override
+							public void onFailure(int statusCode, Header[] headers,
+									Throwable throwable, JSONObject errorResponse) {
+								// TODO Auto-generated method stub
+								Toast.makeText(LauncherActivity.this, "验证短信发送超时", Toast.LENGTH_SHORT).show();
+							}
+
+							@Override
+							public void onSuccess(int statusCode, Header[] headers,
+									JSONObject response) {
+								// TODO Auto-generated method stub
+							}
+							
+						});
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
 				}
 			}
 		});

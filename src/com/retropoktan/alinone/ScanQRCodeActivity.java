@@ -1,6 +1,7 @@
 package com.retropoktan.alinone;
 
 import java.io.IOException;
+import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -40,6 +42,7 @@ import com.google.zxing.Result;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.retropoktan.alinone.alinoneDao.AlinoneOrder;
 import com.retropoktan.alinone.alinoneDao.DBService;
+import com.retropoktan.alinone.alinoneDao.Merchant;
 import com.retropoktan.alinone.hud.ProgressHUD;
 import com.retropoktan.alinone.netutil.HttpUtil;
 import com.retropoktan.alinone.netutil.URLConstants;
@@ -71,6 +74,8 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	CameraManager cameraManager;
 	
 	private ArrayList<String> qrCodeList = new ArrayList<String>();
+	
+	private int RESULT_OK_FOR_MERCHANT = 10;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -470,10 +475,12 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 				}
 				else {
 					try {
+						String timeStamp = ((long)System.currentTimeMillis() / 1000) + "";
 						final ProgressHUD progressHUD = ProgressHUD.show(ScanQRCodeActivity.this, "绑定中", true);
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("merchant_id", qrCodeList.get(0));
+						jsonObject.put("merchant_id", "00000001");
 						jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+						jsonObject.put("time_stamp", timeStamp);
 						StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
 						HttpUtil.post(getApplicationContext(), URLConstants.BindMerchantUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
 							
@@ -493,17 +500,18 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 								progressHUD.dismiss();
 								try {
 									if (response.get("status").toString().equals("1")) {
-										JSONObject orderObject = (JSONObject)response.get("body");
-										Log.d("one merchant", orderObject.toString());
+										JSONObject merchantObject = (JSONObject)response.get("body");
+										Log.d("one merchant", merchantObject.toString());
 										Toast.makeText(getApplicationContext(), "绑定成功", Toast.LENGTH_SHORT).show();
-										Intent intent = new Intent(ScanQRCodeActivity.this, ArrangeOrderFragment.class);
+										dbService.saveMerchant(new Merchant(null, merchantObject.get("merchant_id").toString(), merchantObject.get("merchant_name").toString(), 0));
+										Intent intent = new Intent(ScanQRCodeActivity.this, PersonCenterFragment.class);
 										setResult(RESULT_OK, intent);
 										ScanQRCodeActivity.this.finish();
 									}
 									else {
 										Toast.makeText(getApplicationContext(), "绑定出错", Toast.LENGTH_SHORT).show();
-										Intent intent = new Intent(ScanQRCodeActivity.this, ArrangeOrderFragment.class);
-										setResult(RESULT_OK, intent);
+										Intent intent = new Intent(ScanQRCodeActivity.this, PersonCenterFragment.class);
+										setResult(RESULT_CANCELED, intent);
 										ScanQRCodeActivity.this.finish();
 									}
 								} catch (Exception e) {

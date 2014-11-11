@@ -6,7 +6,7 @@ public class URLConstants {
 	public static final String ApiUrl = BasicUrl + "/api/v1";
 	public static final String LoginUrl = ApiUrl + "/sender/login";
 	public static final String RegisterUrl = ApiUrl + "/sender/register";
-	public static final String SMSRegisterUrl = ApiUrl + "";
+	public static final String SMSRegisterUrl = ApiUrl + "/sender/req_verify";
 	public static final String SMSForgetUrl = ApiUrl + "/sender/forget_password";
 	public static final String SMSNewPasswordUrl = ApiUrl + "/sender/new_password";
 	public static final String BindMerchantUrl = ApiUrl + "/sender/bind_merchant";

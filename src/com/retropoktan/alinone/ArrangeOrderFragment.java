@@ -112,7 +112,7 @@ public class ArrangeOrderFragment extends Fragment{
 						startActivity(intent);
 						break;
 					case 1:
-						sendSMS("10086", "同学~你的外卖到了~请前来领取~~");
+						sendSMS(phoneString, "同学~你的外卖到了~请前来领取~~");
 						break;
 					default:
 						break;
@@ -147,38 +147,7 @@ public class ArrangeOrderFragment extends Fragment{
 			break;
 		case R.id.commit_all_orders:
 			if (addOrderButton.getVisibility() == View.GONE) {
-				try {
-					JSONObject jsonObject = new JSONObject();
-					JSONArray jsonArray = new JSONArray();
-					for (AlinoneOrder alinoneOrder : orderList) {
-						JSONObject jsonObjectInside = new JSONObject();
-						jsonObjectInside.put("order_id", alinoneOrder.getOrderID());
-						jsonArray.put(jsonObjectInside);
-					}
-					jsonObject.put("orders_id", jsonArray);
-					jsonObject.put("private_token", BaseApplication.getInstance().getToken());
-					StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
-					HttpUtil.post(getActivity().getApplicationContext(), URLConstants.FinishOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
-
-						@Override
-						public void onFailure(int statusCode, Header[] headers,
-								Throwable throwable, JSONObject errorResponse) {
-							// TODO Auto-generated method stub
-							super.onFailure(statusCode, headers, throwable, errorResponse);
-						}
-
-						@Override
-						public void onSuccess(int statusCode, Header[] headers,
-								JSONObject response) {
-							// TODO Auto-generated method stub
-							super.onSuccess(statusCode, headers, response);
-						}
-						
-					});
-					dbService.deleteAllOrders();
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
+				commmitAllOrders(orderList);
 			}
 			else {
 				Toast.makeText(getActivity().getApplicationContext(), "当前暂无订单提交", Toast.LENGTH_SHORT);
@@ -203,8 +172,39 @@ public class ArrangeOrderFragment extends Fragment{
 		}
 	}
 	
-	public void commmitAllOrders(ArrayList<String> arrayList) {
-		
+	public void commmitAllOrders(List<AlinoneOrder> arrayList) {
+		try {
+			JSONObject jsonObject = new JSONObject();
+			JSONArray jsonArray = new JSONArray();
+			for (AlinoneOrder alinoneOrder : arrayList) {
+				JSONObject jsonObjectInside = new JSONObject();
+				jsonObjectInside.put("order_id", alinoneOrder.getOrderID());
+				jsonArray.put(jsonObjectInside);
+			}
+			jsonObject.put("orders_id", jsonArray);
+			jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+			StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+			HttpUtil.post(getActivity().getApplicationContext(), URLConstants.FinishOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers,
+						Throwable throwable, JSONObject errorResponse) {
+					// TODO Auto-generated method stub
+					Toast.makeText(getActivity().getApplicationContext(), "提交超时", Toast.LENGTH_SHORT).show();
+				}
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers,
+						JSONObject response) {
+					// TODO Auto-generated method stub
+					Toast.makeText(getActivity().getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
+					dbService.deleteAllOrders();
+				}
+				
+			});
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 	public void readOrdersInfo() {
