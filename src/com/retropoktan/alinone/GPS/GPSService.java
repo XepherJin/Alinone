@@ -8,11 +8,12 @@ import android.location.LocationManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GPSService extends Service{
 
-	private static final long minTime = 0; // 5s
-	private static final float minDistance = 0f;
+	private static final long minTime = 5000; // 5s
+	private static final float minDistance = 0.3f;
 	String tag = this.toString();
 	private LocationManager locationManager;
 	private LocationListener locationListener;
@@ -20,7 +21,7 @@ public class GPSService extends Service{
 	
 	public void startService() {
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		locationListener = new GPSServiceListener();
+		locationListener = new GPSServiceListener(GPSService.this);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, 0, locationListener);
 		Log.d("gpsservice", "gpsservice start-----------------------------");
 	}
@@ -41,6 +42,7 @@ public class GPSService extends Service{
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		startService();
+        Toast.makeText(getApplicationContext(), "这里是：onCreate", 1000).show();  
 	}
 
 	@Override

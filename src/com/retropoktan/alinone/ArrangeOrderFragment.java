@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -197,8 +198,11 @@ public class ArrangeOrderFragment extends Fragment{
 				public void onSuccess(int statusCode, Header[] headers,
 						JSONObject response) {
 					// TODO Auto-generated method stub
+					Log.d("qweqwe", response.toString());
 					Toast.makeText(getActivity().getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
 					dbService.deleteAllOrders();
+					orderList.clear();
+					adapter.notifyDataSetChanged();
 				}
 				
 			});

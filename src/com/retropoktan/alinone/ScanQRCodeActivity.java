@@ -1,18 +1,17 @@
 package com.retropoktan.alinone;
 
 import java.io.IOException;
-import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -237,11 +236,18 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 		qrCodeID = rawResult.getText();
 		Toast.makeText(getApplicationContext(), qrCodeID, Toast.LENGTH_SHORT).show();
 		
-		if (qrCodeID.length() == 22) {
-			getQRCodeInfo(qrCodeID);
-		}
-		else if (qrCodeID.length() == 18) {
+		if (qrCodeID.length() == 18) {
 			getQRCodeMerchant(qrCodeID);
+		}
+		else if (qrCodeID.length() > 30) {
+			String orderID = qrCodeID.substring(qrCodeID.length() - 22, qrCodeID.length());
+			String time = orderID.substring(0, 8);
+			if (isNumeric(orderID)) {
+				getQRCodeInfo(orderID);
+			}
+			else {
+				Toast.makeText(getApplicationContext(), "非法二维码", Toast.LENGTH_SHORT).show();
+			}
 		}
 		else {
 			Toast.makeText(getApplicationContext(), "非法二维码", Toast.LENGTH_SHORT).show();
@@ -347,8 +353,6 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	}
 	
 	private void getQRCodeInfo(String string) {
-		String orderID = string;
-		String time = string.substring(0, 8);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 		String date = simpleDateFormat.format(new Date());
 		//if (!time.equals(date)) {
@@ -359,8 +363,8 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 		//	.show();
 		//}
 		//else {
-			if (!qrCodeList.contains(orderID)) {
-				qrCodeList.add(orderID);
+			if (!qrCodeList.contains(string)) {
+				qrCodeList.add(string);
 				new AlertDialog.Builder(ScanQRCodeActivity.this)
 				.setTitle("识别成功")
 				.setMessage("已成功扫描！")
@@ -379,9 +383,15 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 			}
 		//}
 	}
+	public boolean isNumeric(String str){ 
+	    Pattern pattern = Pattern.compile("[0-9]*"); 
+	    return pattern.matcher(str).matches();
+	 }
 	
 	private void getQRCodeMerchant(String string) {
-		qrCodeList.add(string);
+		String merchantID = string.substring(0, 8);
+		qrCodeList.clear();
+		qrCodeList.add(merchantID);
 		new AlertDialog.Builder(ScanQRCodeActivity.this)
 		.setTitle("识别商家成功")
 		.setMessage("已成功扫描商家！")
@@ -409,7 +419,7 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 			else {
 				if (qrCodeList.get(0).toString().length() > 20) {
 					try {
-						final ProgressHUD progressHUD = ProgressHUD.show(ScanQRCodeActivity.this, "绑定中", true);
+						final ProgressHUD progressHUD = ProgressHUD.show(ScanQRCodeActivity.this, "绑定订单中", true);
 						JSONObject jsonObject = new JSONObject();
 						JSONArray jsonArray = new JSONArray();
 						for (String validOrderID : qrCodeList) {
@@ -476,11 +486,12 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 				else {
 					try {
 						String timeStamp = ((long)System.currentTimeMillis() / 1000) + "";
-						final ProgressHUD progressHUD = ProgressHUD.show(ScanQRCodeActivity.this, "绑定中", true);
+						final ProgressHUD progressHUD = ProgressHUD.show(ScanQRCodeActivity.this, "绑定商家中", true);
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("merchant_id", "00000001");
+						jsonObject.put("merchant_id", qrCodeList.get(0));
 						jsonObject.put("private_token", BaseApplication.getInstance().getToken());
 						jsonObject.put("time_stamp", timeStamp);
+						Log.d("time_stamp", timeStamp.toString());
 						StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
 						HttpUtil.post(getApplicationContext(), URLConstants.BindMerchantUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
 							

@@ -26,6 +26,12 @@ public class GPSServiceListener implements LocationListener{
 	private Context context;
 	
 	public int GPSCurrentStatus;
+	
+	public GPSServiceListener(Context context) {
+		super();
+		this.context = context;
+	}
+
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
@@ -70,6 +76,9 @@ public class GPSServiceListener implements LocationListener{
 				} catch (Exception e) {
 					// TODO: handle exception
 			}
+		}
+		else {
+			Toast.makeText(context, "无法获取GPS地理位置", Toast.LENGTH_SHORT).show();
 		}
 	}
 

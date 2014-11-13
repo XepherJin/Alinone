@@ -127,6 +127,7 @@ public class AlinoneMainActivity extends ActionBarActivity{
 			BaseApplication.getInstance().setPhoneNum("");
 			BaseApplication.getInstance().setPassword("");
 			BaseApplication.getInstance().setUserId("");
+			BaseApplication.getInstance().setToken("");
 			Intent intent = new Intent(AlinoneMainActivity.this, LauncherActivity.class);
 			startActivity(intent);
 			AlinoneMainActivity.this.finish();
@@ -157,7 +158,7 @@ public class AlinoneMainActivity extends ActionBarActivity{
 				public void onSuccess(int statusCode,
 						Header[] headers, JSONObject response) {
 					try {
-						Log.v("status", response.toString());
+						Log.d("status", response.toString());
 						if (response.get("status").toString().equals("1")) {
 							JSONObject jsonObject = new JSONObject(response.get("body").toString());
 							BaseApplication.getInstance().setToken(jsonObject.get("private_token").toString());
