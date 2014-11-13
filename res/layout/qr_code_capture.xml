@@ -18,12 +18,16 @@
     </com.retropoktan.alinone.qrcode.view.ViewfinderView>
 
     <TextView
+        android:id="@+id/scan_qr_code_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal"
-        android:text="请将条码置于取景框内扫描。"
-        android:textSize="17sp" >
+        android:text="请将条码置于取景框内扫描"
+        android:layout_marginBottom="50dp"
+        android:textColor="#428bca"
+        android:textStyle="bold"
+        android:textSize="25sp" >
     </TextView>
 
 </RelativeLayout>

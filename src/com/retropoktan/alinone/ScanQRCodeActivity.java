@@ -34,6 +34,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -58,6 +59,7 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	private DBService dbService;
 	
 	private String qrCodeID;
+	private TextView qrcodeTextView;
 
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -122,6 +124,7 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 		Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		dbService = DBService.getInstance(getApplicationContext());
+		qrcodeTextView = (TextView)findViewById(R.id.scan_qr_code_textview);
 
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
@@ -234,7 +237,6 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	private void showResult(final Result rawResult, Bitmap barcode) {
 		
 		qrCodeID = rawResult.getText();
-		Toast.makeText(getApplicationContext(), qrCodeID, Toast.LENGTH_SHORT).show();
 		
 		if (qrCodeID.length() == 18) {
 			getQRCodeMerchant(qrCodeID);
@@ -365,11 +367,8 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 		//else {
 			if (!qrCodeList.contains(string)) {
 				qrCodeList.add(string);
-				new AlertDialog.Builder(ScanQRCodeActivity.this)
-				.setTitle("识别成功")
-				.setMessage("已成功扫描！")
-				.setPositiveButton("继续扫描", null)
-				.show();
+				Toast.makeText(getApplicationContext(), "已成功扫描订单", Toast.LENGTH_SHORT).show();
+				qrcodeTextView.setText("已成功扫描" + qrCodeList.size() + "份订单");
 				restartPreviewAfterDelay(2500L);
 				Log.v("list!!!!!!!!!", qrCodeList.toString());
 			}

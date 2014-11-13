@@ -1,7 +1,6 @@
 package com.retropoktan.alinone;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -26,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -93,6 +93,40 @@ public class ArrangeOrderFragment extends Fragment{
 		readOrdersInfo();
 	}
 	
+	class OrderStatusChangeOnItemLongClickListener implements OnItemLongClickListener{
+
+		@Override
+		public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+				int arg2, long arg3) {
+			// TODO Auto-generated method stub
+			final AlinoneOrder order = ((AlinoneOrder)orderList.get(arg2));
+			new AlertDialog.Builder(getActivity())
+			.setTitle("操作订单")
+			.setItems(new String[]{"配送完成", "撤销订单"}, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					switch (which) {
+					case 0:
+						commitOneOrder(order);
+						adapter.notifyDataSetChanged();
+						break;
+					case 1:
+						orderList.remove(order);
+						adapter.notifyDataSetChanged();
+						break;
+					default:
+						break;
+					}
+				}
+			}).setNegativeButton("取消", null)
+			.show();
+			return true;
+		}
+		
+	}
+	
 	class OrdersOnItemClickListener implements OnItemClickListener{
 
 		@Override
@@ -148,7 +182,19 @@ public class ArrangeOrderFragment extends Fragment{
 			break;
 		case R.id.commit_all_orders:
 			if (addOrderButton.getVisibility() == View.GONE) {
-				commmitAllOrders(orderList);
+				new AlertDialog.Builder(getActivity())
+				.setTitle("提交订单")
+				.setMessage("确认全部订单配送完成并提交？")
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						commmitAllOrders(orderList);
+					}
+				})
+				.setNegativeButton("取消", null)
+				.show();
 			}
 			else {
 				Toast.makeText(getActivity().getApplicationContext(), "当前暂无订单提交", Toast.LENGTH_SHORT);
@@ -173,42 +219,57 @@ public class ArrangeOrderFragment extends Fragment{
 		}
 	}
 	
+	public void showBindOrderButton(List<AlinoneOrder> list) {
+		if (list.size() <= 0) {
+			addOrderButton.setVisibility(View.VISIBLE);
+		}
+	}
+	
 	public void commmitAllOrders(List<AlinoneOrder> arrayList) {
+		for (AlinoneOrder alinoneOrder : orderList) {
+			dbService.deleteOrder(alinoneOrder);
+		}
 		try {
 			JSONObject jsonObject = new JSONObject();
 			JSONArray jsonArray = new JSONArray();
-			for (AlinoneOrder alinoneOrder : arrayList) {
-				JSONObject jsonObjectInside = new JSONObject();
-				jsonObjectInside.put("order_id", alinoneOrder.getOrderID());
-				jsonArray.put(jsonObjectInside);
+			if (dbService.loadAllOrders().size() > 0) {
+				for (AlinoneOrder alinoneOrder : dbService.loadAllOrders()) {
+					JSONObject jsonObjectInside = new JSONObject();
+					jsonObjectInside.put("order_id", alinoneOrder.getOrderID());
+					jsonArray.put(jsonObjectInside);
+				}
+				jsonObject.put("orders_id", jsonArray);
+				jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+				StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+				HttpUtil.post(getActivity().getApplicationContext(), URLConstants.FinishOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+					@Override
+					public void onFailure(int statusCode, Header[] headers,
+							Throwable throwable, JSONObject errorResponse) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity().getApplicationContext(), "提交超时", Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onSuccess(int statusCode, Header[] headers,
+							JSONObject response) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity().getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+						dbService.deleteAllOrders();
+						orderList.clear();
+						adapter.notifyDataSetChanged();
+					}
+					
+				});
 			}
-			jsonObject.put("orders_id", jsonArray);
-			jsonObject.put("private_token", BaseApplication.getInstance().getToken());
-			StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
-			HttpUtil.post(getActivity().getApplicationContext(), URLConstants.FinishOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
-
-				@Override
-				public void onFailure(int statusCode, Header[] headers,
-						Throwable throwable, JSONObject errorResponse) {
-					// TODO Auto-generated method stub
-					Toast.makeText(getActivity().getApplicationContext(), "提交超时", Toast.LENGTH_SHORT).show();
-				}
-
-				@Override
-				public void onSuccess(int statusCode, Header[] headers,
-						JSONObject response) {
-					// TODO Auto-generated method stub
-					Log.d("qweqwe", response.toString());
-					Toast.makeText(getActivity().getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
-					dbService.deleteAllOrders();
-					orderList.clear();
-					adapter.notifyDataSetChanged();
-				}
-				
-			});
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+	}
+	
+	public void commitOneOrder(AlinoneOrder order) {
+		orderList.remove(order);
+		dbService.deleteOrder(order);
 	}
 	
 	public void readOrdersInfo() {
@@ -224,6 +285,7 @@ public class ArrangeOrderFragment extends Fragment{
 		}
 		adapter = new OrderListAdapter(orderList, getActivity());
 		currentOrderListView.setAdapter(adapter);
+		currentOrderListView.setOnItemLongClickListener(new OrderStatusChangeOnItemLongClickListener());
 		currentOrderListView.setOnItemClickListener(new OrdersOnItemClickListener());
 	}
 }
