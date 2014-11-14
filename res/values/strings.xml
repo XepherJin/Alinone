@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <color name="theme_color">#2a9dff</color>
 
 </resources>

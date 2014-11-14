@@ -3,7 +3,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/bottom_tab_bar_background"
+        android:background="#eeeeee"
         android:gravity="center" >
 
         <LinearLayout
@@ -20,18 +20,24 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 
+                <View 
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#c0c0c0"/>
+                
                 <ImageView 
                     android:id="@+id/arrange_order_imageview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:background="@android:drawable/ic_menu_add"/>
+                    android:background="@drawable/order_pressed"/>
                 
                 <TextView
                     android:id="@+id/arrange_order_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:textColor="@color/theme_color"
                     android:textSize="11dp"
                     android:text="配送订单" />
 
@@ -44,18 +50,24 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 
+                <View 
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#c0c0c0"/>
+                
                 <ImageView 
                     android:id="@+id/person_center_imageview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:background="@android:drawable/ic_menu_edit"/>
+                    android:background="@drawable/user_unpressed"/>
                 
                 <TextView
                     android:id="@+id/person_center_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:textColor="#666666"
                     android:textSize="11dp"
                     android:text="个人中心" />
 
@@ -63,4 +75,4 @@
             
       </LinearLayout>
       
-    </LinearLayout>
+</LinearLayout>

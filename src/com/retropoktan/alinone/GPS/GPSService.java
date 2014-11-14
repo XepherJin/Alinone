@@ -23,7 +23,6 @@ public class GPSService extends Service{
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new GPSServiceListener(GPSService.this);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, 0, locationListener);
-		Log.d("gpsservice", "gpsservice start-----------------------------");
 	}
 	
 	public void endService() {

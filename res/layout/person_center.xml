@@ -19,6 +19,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:text="绑定商家"
+            android:textColor="#ffffff"
             android:visibility="gone"
             android:background="@drawable/scan_order_and_bind_merchant"
             android:gravity="center"/>

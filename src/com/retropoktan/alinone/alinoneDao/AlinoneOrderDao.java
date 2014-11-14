@@ -11,7 +11,7 @@ import de.greenrobot.dao.internal.DaoConfig;
 /** 
  * DAO for table ALINONE_ORDER.
 */
-public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, Long> {
+public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, String> {
 
     public static final String TABLENAME = "ALINONE_ORDER";
 
@@ -20,12 +20,11 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property OrderID = new Property(1, String.class, "orderID", false, "ORDER_ID");
-        public final static Property ObjectPhone = new Property(2, String.class, "objectPhone", false, "OBJECT_PHONE");
-        public final static Property OrderAddress = new Property(3, String.class, "orderAddress", false, "ORDER_ADDRESS");
-        public final static Property MerchantID = new Property(4, String.class, "merchantID", false, "MERCHANT_ID");
-        public final static Property OrderTime = new Property(5, java.util.Date.class, "orderTime", false, "ORDER_TIME");
+        public final static Property OrderID = new Property(0, String.class, "orderID", true, "ORDER_ID");
+        public final static Property ObjectPhone = new Property(1, String.class, "objectPhone", false, "OBJECT_PHONE");
+        public final static Property OrderAddress = new Property(2, String.class, "orderAddress", false, "ORDER_ADDRESS");
+        public final static Property MerchantID = new Property(3, String.class, "merchantID", false, "MERCHANT_ID");
+        public final static Property OrderTime = new Property(4, java.util.Date.class, "orderTime", false, "ORDER_TIME");
     };
 
 
@@ -41,12 +40,11 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'ALINONE_ORDER' (" + //
-                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "'ORDER_ID' TEXT NOT NULL ," + // 1: orderID
-                "'OBJECT_PHONE' TEXT NOT NULL ," + // 2: objectPhone
-                "'ORDER_ADDRESS' TEXT NOT NULL ," + // 3: orderAddress
-                "'MERCHANT_ID' TEXT NOT NULL ," + // 4: merchantID
-                "'ORDER_TIME' INTEGER NOT NULL );"); // 5: orderTime
+                "'ORDER_ID' TEXT PRIMARY KEY NOT NULL ," + // 0: orderID
+                "'OBJECT_PHONE' TEXT NOT NULL ," + // 1: objectPhone
+                "'ORDER_ADDRESS' TEXT NOT NULL ," + // 2: orderAddress
+                "'MERCHANT_ID' TEXT NOT NULL ," + // 3: merchantID
+                "'ORDER_TIME' INTEGER NOT NULL );"); // 4: orderTime
     }
 
     /** Drops the underlying database table. */
@@ -59,34 +57,28 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, Long> {
     @Override
     protected void bindValues(SQLiteStatement stmt, AlinoneOrder entity) {
         stmt.clearBindings();
- 
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
-        }
-        stmt.bindString(2, entity.getOrderID());
-        stmt.bindString(3, entity.getObjectPhone());
-        stmt.bindString(4, entity.getOrderAddress());
-        stmt.bindString(5, entity.getMerchantID());
-        stmt.bindLong(6, entity.getOrderTime().getTime());
+        stmt.bindString(1, entity.getOrderID());
+        stmt.bindString(2, entity.getObjectPhone());
+        stmt.bindString(3, entity.getOrderAddress());
+        stmt.bindString(4, entity.getMerchantID());
+        stmt.bindLong(5, entity.getOrderTime().getTime());
     }
 
     /** @inheritdoc */
     @Override
-    public Long readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
+    public String readKey(Cursor cursor, int offset) {
+        return cursor.getString(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public AlinoneOrder readEntity(Cursor cursor, int offset) {
         AlinoneOrder entity = new AlinoneOrder( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getString(offset + 1), // orderID
-            cursor.getString(offset + 2), // objectPhone
-            cursor.getString(offset + 3), // orderAddress
-            cursor.getString(offset + 4), // merchantID
-            new java.util.Date(cursor.getLong(offset + 5)) // orderTime
+            cursor.getString(offset + 0), // orderID
+            cursor.getString(offset + 1), // objectPhone
+            cursor.getString(offset + 2), // orderAddress
+            cursor.getString(offset + 3), // merchantID
+            new java.util.Date(cursor.getLong(offset + 4)) // orderTime
         );
         return entity;
     }
@@ -94,26 +86,24 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, AlinoneOrder entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setOrderID(cursor.getString(offset + 1));
-        entity.setObjectPhone(cursor.getString(offset + 2));
-        entity.setOrderAddress(cursor.getString(offset + 3));
-        entity.setMerchantID(cursor.getString(offset + 4));
-        entity.setOrderTime(new java.util.Date(cursor.getLong(offset + 5)));
+        entity.setOrderID(cursor.getString(offset + 0));
+        entity.setObjectPhone(cursor.getString(offset + 1));
+        entity.setOrderAddress(cursor.getString(offset + 2));
+        entity.setMerchantID(cursor.getString(offset + 3));
+        entity.setOrderTime(new java.util.Date(cursor.getLong(offset + 4)));
      }
     
     /** @inheritdoc */
     @Override
-    protected Long updateKeyAfterInsert(AlinoneOrder entity, long rowId) {
-        entity.setId(rowId);
-        return rowId;
+    protected String updateKeyAfterInsert(AlinoneOrder entity, long rowId) {
+        return entity.getOrderID();
     }
     
     /** @inheritdoc */
     @Override
-    public Long getKey(AlinoneOrder entity) {
+    public String getKey(AlinoneOrder entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getOrderID();
         } else {
             return null;
         }

@@ -111,10 +111,20 @@ public class ArrangeOrderFragment extends Fragment{
 					case 0:
 						commitOneOrder(order);
 						adapter.notifyDataSetChanged();
+						if (orderList.size() <= 0) {
+							Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
+							commmitAllOrders();
+							addOrderButton.setVisibility(View.VISIBLE);
+						}
 						break;
 					case 1:
 						orderList.remove(order);
 						adapter.notifyDataSetChanged();
+						if (orderList.size() <= 0) {
+							Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
+							commmitAllOrders();
+							addOrderButton.setVisibility(View.VISIBLE);
+						}
 						break;
 					default:
 						break;
@@ -197,7 +207,7 @@ public class ArrangeOrderFragment extends Fragment{
 				.show();
 			}
 			else {
-				Toast.makeText(getActivity().getApplicationContext(), "当前暂无订单提交", Toast.LENGTH_SHORT);
+				Toast.makeText(getActivity().getApplicationContext(), "当前暂无订单提交", Toast.LENGTH_SHORT).show();
 			}
 			break;
 		default:
@@ -219,16 +229,20 @@ public class ArrangeOrderFragment extends Fragment{
 		}
 	}
 	
-	public void showBindOrderButton(List<AlinoneOrder> list) {
-		if (list.size() <= 0) {
-			addOrderButton.setVisibility(View.VISIBLE);
+	public void controlOrdersDelete(List<AlinoneOrder> arrayList) {
+		for (AlinoneOrder alinoneOrder : arrayList) {
+			dbService.deleteOrder(alinoneOrder);
 		}
 	}
 	
-	public void commmitAllOrders(List<AlinoneOrder> arrayList) {
-		for (AlinoneOrder alinoneOrder : orderList) {
-			dbService.deleteOrder(alinoneOrder);
+	public void controlOrdersAdd(List<AlinoneOrder> arrayList) {
+		for (AlinoneOrder alinoneOrder : arrayList) {
+			dbService.saveOrder(alinoneOrder);
 		}
+	}
+	
+	public void commmitAllOrders() {
+		Toast.makeText(getActivity().getApplicationContext(), dbService.loadAllOrders().toString(), Toast.LENGTH_SHORT).show();
 		try {
 			JSONObject jsonObject = new JSONObject();
 			JSONArray jsonArray = new JSONArray();
@@ -258,8 +272,103 @@ public class ArrangeOrderFragment extends Fragment{
 						dbService.deleteAllOrders();
 						orderList.clear();
 						adapter.notifyDataSetChanged();
+						addOrderButton.setVisibility(View.VISIBLE);
 					}
 					
+				});
+			}
+			else {
+				jsonObject.put("orders_id", jsonArray);
+				jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+				StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+				HttpUtil.post(getActivity().getApplicationContext(), URLConstants.FinishOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+					@Override
+					public void onFailure(int statusCode, Header[] headers,
+							Throwable throwable, JSONObject errorResponse) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity().getApplicationContext(), "提交超时", Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onSuccess(int statusCode, Header[] headers,
+							JSONObject response) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity().getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+						dbService.deleteAllOrders();
+						orderList.clear();
+						adapter.notifyDataSetChanged();
+						addOrderButton.setVisibility(View.VISIBLE);
+					}
+					
+				});
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public void commmitAllOrders(List<AlinoneOrder> arrayList) {
+		controlOrdersDelete(arrayList);
+		Toast.makeText(getActivity().getApplicationContext(), dbService.loadAllOrders().toString(), Toast.LENGTH_SHORT).show();
+		try {
+			JSONObject jsonObject = new JSONObject();
+			JSONArray jsonArray = new JSONArray();
+			if (dbService.loadAllOrders().size() > 0) {
+				for (AlinoneOrder alinoneOrder : dbService.loadAllOrders()) {
+					JSONObject jsonObjectInside = new JSONObject();
+					jsonObjectInside.put("order_id", alinoneOrder.getOrderID());
+					jsonArray.put(jsonObjectInside);
+				}
+				jsonObject.put("orders_id", jsonArray);
+				jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+				StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+				HttpUtil.post(getActivity().getApplicationContext(), URLConstants.FinishOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+					@Override
+					public void onFailure(int statusCode, Header[] headers,
+							Throwable throwable, JSONObject errorResponse) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity().getApplicationContext(), "提交超时", Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onSuccess(int statusCode, Header[] headers,
+							JSONObject response) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity().getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+						dbService.deleteAllOrders();
+						orderList.clear();
+						adapter.notifyDataSetChanged();
+						addOrderButton.setVisibility(View.VISIBLE);
+					}
+					
+				});
+			}
+			else {
+				jsonObject.put("orders_id", jsonArray);
+				jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+				StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+				HttpUtil.post(getActivity().getApplicationContext(), URLConstants.FinishOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+					@Override
+					public void onFailure(int statusCode, Header[] headers,
+							Throwable throwable, JSONObject errorResponse) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity().getApplicationContext(), "提交超时", Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onSuccess(int statusCode, Header[] headers,
+							JSONObject response) {
+						// TODO Auto-generated method stub
+						Log.v("qqqqqqqqqqqqqqqqqq", response.toString());
+						Toast.makeText(getActivity().getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+						dbService.deleteAllOrders();
+						orderList.clear();
+						adapter.notifyDataSetChanged();
+						addOrderButton.setVisibility(View.VISIBLE);
+					}
 				});
 			}
 		} catch (Exception e) {

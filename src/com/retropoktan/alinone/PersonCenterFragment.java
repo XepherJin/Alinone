@@ -55,8 +55,6 @@ public class PersonCenterFragment extends Fragment{
 	
 	private List<Merchant> merchantList;
 	
-	private List<String> qrcodeList = new ArrayList<String>();
-	
 	private int REQUEST_CODE = 1;
 	
 	@Override
@@ -164,6 +162,7 @@ public class PersonCenterFragment extends Fragment{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 			if (resultCode == Activity.RESULT_OK) {
+				merchantList.clear();
 				readMerchantInfo();
 			}
 	}
@@ -216,12 +215,15 @@ public class PersonCenterFragment extends Fragment{
 							merchantList.clear();
 							for (int i = 0; i < jsonArray.length(); i++) {
 								JSONObject jsonObject = jsonArray.getJSONObject(i);
-								Merchant merchant = new Merchant(null, jsonObject.get("merchant_id").toString(), jsonObject.get("merchant_name").toString(), Integer.parseInt(jsonObject.get("sended").toString()));
+								Merchant merchant = new Merchant(jsonObject.get("merchant_id").toString(), jsonObject.get("merchant_name").toString(), Integer.parseInt(jsonObject.get("sended").toString()));
 								merchantList.add(merchant);
 								dbService.saveMerchant(merchant);
 							}
 							if (merchantList.size() > 0) {
 								bindMerchantButton.setVisibility(View.GONE);
+							}
+							else {
+								bindMerchantButton.setVisibility(View.VISIBLE);
 							}
 							adapter.notifyDataSetChanged();
 						}

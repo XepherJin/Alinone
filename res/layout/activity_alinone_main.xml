@@ -13,15 +13,16 @@
         android:id="@+id/content"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/bottomTabBar" >
+        android:layout_above="@+id/bottom_tab_bar" >
     </FrameLayout>
     
     <com.retropoktan.alinone.bottomtabbar.BottomTabBar 
         android:id="@+id/bottom_tab_bar"
         android:layout_width="fill_parent"
+        android:alpha="150"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
-    </com.retropoktan.alinone.bottomtabbar.BottomTabBar>\
+    </com.retropoktan.alinone.bottomtabbar.BottomTabBar>
     
     </RelativeLayout>
 

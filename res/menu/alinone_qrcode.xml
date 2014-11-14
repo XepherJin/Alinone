@@ -3,7 +3,7 @@
     
     <item  
         android:id="@+id/save_qrcode_info"  
-        android:icon="@drawable/tick"  
+        android:icon="@drawable/check_mark"
         android:showAsAction="always"  
         android:title="完成扫描订单"/>  
 

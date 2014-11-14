@@ -11,7 +11,7 @@ public class DBService {
 	private static DBService instance;
 	private static Context appContext;
 	private DaoSession mDaoSession;
-	private OrderDao orderDao;
+	private AlinoneOrderDao AlinoneOrderDao;
 	private MerchantDao merchantDao;
 
 	public static DBService getInstance(Context context) {
@@ -21,55 +21,55 @@ public class DBService {
 				appContext = context.getApplicationContext();
 			}
 			instance.mDaoSession = BaseApplication.getDaoSession(context);
-			instance.orderDao = instance.mDaoSession.getOrderDao();
+			instance.AlinoneOrderDao = instance.mDaoSession.getAlinoneOrderDao();
 			instance.merchantDao = instance.mDaoSession.getMerchantDao();
 		}
 		return instance;
 	}
 	
-	public Order loadOrder(long id) {
-		return orderDao.load(id);
+	public AlinoneOrder loadOrder(long id) {
+		return AlinoneOrderDao.load(id);
 	}
 	
-	public List<Order> loadAllOrders() {
-		return orderDao.loadAll();
+	public List<AlinoneOrder> loadAllOrders() {
+		return AlinoneOrderDao.loadAll();
 	}
 	
-	public List<Order> queryOrder(String where, String... params) {
-		return orderDao.queryRaw(where, params);
+	public List<AlinoneOrder> queryOrder(String where, String... params) {
+		return AlinoneOrderDao.queryRaw(where, params);
 	}
 	
-	public long saveOrder(Order order) {
-		return orderDao.insertOrReplace(order);
+	public long saveOrder(AlinoneOrder order) {
+		return AlinoneOrderDao.insertOrReplace(order);
 	}
 	
-	public void saveOrderLists(final List<Order> list) {
+	public void saveOrderLists(final List<AlinoneOrder> list) {
 		if (list == null || list.isEmpty()) {
 			return;
 		}
-		orderDao.getSession().runInTx(new Runnable() {
+		AlinoneOrderDao.getSession().runInTx(new Runnable() {
 			
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				for (int i = 0; i < list.size(); i++) {
-					Order order = list.get(i);
-					orderDao.insertOrReplace(order);
+					AlinoneOrder order = list.get(i);
+					AlinoneOrderDao.insertOrReplace(order);
 				}
 			}
 		});
 	}
 	
 	public void deleteAllOrders() {
-		orderDao.deleteAll();
+		AlinoneOrderDao.deleteAll();
 	}
 	
 	public void deleteOrder(long id) {
-		orderDao.deleteByKey(id);
+		AlinoneOrderDao.deleteByKey(id);
 	}
 	
-	public void deleteOrder(Order order) {
-		orderDao.delete(order);
+	public void deleteOrder(AlinoneOrder order) {
+		AlinoneOrderDao.delete(order);
 	}
 	
 	public Merchant loadMerchant(long id) {

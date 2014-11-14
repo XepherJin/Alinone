@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:text="添加订单"
             android:visibility="gone"
+            android:textColor="#ffffff"
             android:background="@drawable/scan_order_and_bind_merchant"
             android:gravity="center"/>
         

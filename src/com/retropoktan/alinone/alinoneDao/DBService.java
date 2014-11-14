@@ -2,9 +2,9 @@ package com.retropoktan.alinone.alinoneDao;
 
 import java.util.List;
 
-import com.retropoktan.alinone.BaseApplication;
-
 import android.content.Context;
+
+import com.retropoktan.alinone.BaseApplication;
 
 public class DBService {
 
@@ -25,10 +25,6 @@ public class DBService {
 			instance.merchantDao = instance.mDaoSession.getMerchantDao();
 		}
 		return instance;
-	}
-	
-	public AlinoneOrder loadOrder(long id) {
-		return AlinoneOrderDao.load(id);
 	}
 	
 	public List<AlinoneOrder> loadAllOrders() {
@@ -63,17 +59,9 @@ public class DBService {
 	public void deleteAllOrders() {
 		AlinoneOrderDao.deleteAll();
 	}
-	
-	public void deleteOrder(long id) {
-		AlinoneOrderDao.deleteByKey(id);
-	}
-	
+
 	public void deleteOrder(AlinoneOrder order) {
 		AlinoneOrderDao.delete(order);
-	}
-	
-	public Merchant loadMerchant(long id) {
-		return merchantDao.load(id);
 	}
 	
 	public List<Merchant> loadAllMerchants() {
@@ -107,10 +95,6 @@ public class DBService {
 	
 	public void deleteAllMerchants() {
 		merchantDao.deleteAll();
-	}
-	
-	public void deleteMerchant(long id) {
-		merchantDao.deleteByKey(id);
 	}
 	
 	public void deleteMerchant(Merchant merchant) {

@@ -63,7 +63,7 @@ public class GPSServiceListener implements LocationListener{
 								if (response.get("status").toString().equals("3")) {
 									JSONArray orderArray = ((JSONObject)response.get("body")).getJSONArray("orders_id");
 									for (int i = 0; i < orderArray.length(); i++) {
-										
+										JSONObject orderJsonObject = (JSONObject)orderArray.get(i);
 									}
 								}
 							} catch (JSONException e) {

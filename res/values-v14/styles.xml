@@ -1,12 +1,38 @@
-<resources>
-
-    <!--
-        Base application theme for API 14+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
-    -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- API 14 theme customizations can go here. -->
+<?xml version="1.0" encoding="utf-8"?>  
+<resources>  
+    <!-- the theme applied to the application or activity -->  
+    <style name="CustomActionBarTheme" 
+           parent="@style/Theme.AppCompat.Light.DarkActionBar">  
+        <item name="android:actionBarStyle">@style/MyActionBar</item>  
+   
+        <!-- Support library compatibility -->  
+        <item name="actionBarStyle">@style/MyActionBar</item>  
+    </style>  
+   
+    <!-- ActionBar styles -->  
+    <style name="MyActionBar" 
+           parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">  
+        <item name="android:background">@color/theme_color</item>  
+        <item name="android:titleTextStyle">@style/MyTitleStyle</item>  
+   
+        <!-- Support library compatibility -->  
+        <item name="background">@color/theme_color</item>  
+        <item name="titleTextStyle">@style/MyTitleStyle</item>  
+    </style>  
+    <style name="MyTitleStyle" 
+           parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">  
+        <item name="android:textSize">20dp</item>  
+    </style>  
+    
+    <style name="ProgressHUD" 
+        parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

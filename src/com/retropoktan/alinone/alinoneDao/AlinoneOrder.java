@@ -6,7 +6,6 @@ package com.retropoktan.alinone.alinoneDao;
  */
 public class AlinoneOrder {
 
-    private Long id;
     /** Not-null value. */
     private String orderID;
     /** Not-null value. */
@@ -21,25 +20,16 @@ public class AlinoneOrder {
     public AlinoneOrder() {
     }
 
-    public AlinoneOrder(Long id) {
-        this.id = id;
+    public AlinoneOrder(String orderID) {
+        this.orderID = orderID;
     }
 
-    public AlinoneOrder(Long id, String orderID, String objectPhone, String orderAddress, String merchantID, java.util.Date orderTime) {
-        this.id = id;
+    public AlinoneOrder(String orderID, String objectPhone, String orderAddress, String merchantID, java.util.Date orderTime) {
         this.orderID = orderID;
         this.objectPhone = objectPhone;
         this.orderAddress = orderAddress;
         this.merchantID = merchantID;
         this.orderTime = orderTime;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     /** Not-null value. */

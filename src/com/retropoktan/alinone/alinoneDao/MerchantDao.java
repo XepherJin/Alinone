@@ -11,7 +11,7 @@ import de.greenrobot.dao.internal.DaoConfig;
 /** 
  * DAO for table MERCHANT.
 */
-public class MerchantDao extends AbstractDao<Merchant, Long> {
+public class MerchantDao extends AbstractDao<Merchant, String> {
 
     public static final String TABLENAME = "MERCHANT";
 
@@ -20,10 +20,9 @@ public class MerchantDao extends AbstractDao<Merchant, Long> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property MerchantID = new Property(1, String.class, "merchantID", false, "MERCHANT_ID");
-        public final static Property MerchantName = new Property(2, String.class, "merchantName", false, "MERCHANT_NAME");
-        public final static Property OrderNum = new Property(3, int.class, "orderNum", false, "ORDER_NUM");
+        public final static Property MerchantID = new Property(0, String.class, "merchantID", true, "MERCHANT_ID");
+        public final static Property MerchantName = new Property(1, String.class, "merchantName", false, "MERCHANT_NAME");
+        public final static Property OrderNum = new Property(2, int.class, "orderNum", false, "ORDER_NUM");
     };
 
 
@@ -39,10 +38,9 @@ public class MerchantDao extends AbstractDao<Merchant, Long> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'MERCHANT' (" + //
-                "'_id' INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "'MERCHANT_ID' TEXT NOT NULL ," + // 1: merchantID
-                "'MERCHANT_NAME' TEXT NOT NULL ," + // 2: merchantName
-                "'ORDER_NUM' INTEGER NOT NULL );"); // 3: orderNum
+                "'MERCHANT_ID' TEXT PRIMARY KEY NOT NULL ," + // 0: merchantID
+                "'MERCHANT_NAME' TEXT NOT NULL ," + // 1: merchantName
+                "'ORDER_NUM' INTEGER NOT NULL );"); // 2: orderNum
     }
 
     /** Drops the underlying database table. */
@@ -55,30 +53,24 @@ public class MerchantDao extends AbstractDao<Merchant, Long> {
     @Override
     protected void bindValues(SQLiteStatement stmt, Merchant entity) {
         stmt.clearBindings();
- 
-        Long id = entity.getId();
-        if (id != null) {
-            stmt.bindLong(1, id);
-        }
-        stmt.bindString(2, entity.getMerchantID());
-        stmt.bindString(3, entity.getMerchantName());
-        stmt.bindLong(4, entity.getOrderNum());
+        stmt.bindString(1, entity.getMerchantID());
+        stmt.bindString(2, entity.getMerchantName());
+        stmt.bindLong(3, entity.getOrderNum());
     }
 
     /** @inheritdoc */
     @Override
-    public Long readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
+    public String readKey(Cursor cursor, int offset) {
+        return cursor.getString(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public Merchant readEntity(Cursor cursor, int offset) {
         Merchant entity = new Merchant( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getString(offset + 1), // merchantID
-            cursor.getString(offset + 2), // merchantName
-            cursor.getInt(offset + 3) // orderNum
+            cursor.getString(offset + 0), // merchantID
+            cursor.getString(offset + 1), // merchantName
+            cursor.getInt(offset + 2) // orderNum
         );
         return entity;
     }
@@ -86,24 +78,22 @@ public class MerchantDao extends AbstractDao<Merchant, Long> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Merchant entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setMerchantID(cursor.getString(offset + 1));
-        entity.setMerchantName(cursor.getString(offset + 2));
-        entity.setOrderNum(cursor.getInt(offset + 3));
+        entity.setMerchantID(cursor.getString(offset + 0));
+        entity.setMerchantName(cursor.getString(offset + 1));
+        entity.setOrderNum(cursor.getInt(offset + 2));
      }
     
     /** @inheritdoc */
     @Override
-    protected Long updateKeyAfterInsert(Merchant entity, long rowId) {
-        entity.setId(rowId);
-        return rowId;
+    protected String updateKeyAfterInsert(Merchant entity, long rowId) {
+        return entity.getMerchantID();
     }
     
     /** @inheritdoc */
     @Override
-    public Long getKey(Merchant entity) {
+    public String getKey(Merchant entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getMerchantID();
         } else {
             return null;
         }

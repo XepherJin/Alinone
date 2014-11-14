@@ -221,7 +221,8 @@ public class AlinoneMainActivity extends ActionBarActivity{
 		hideFragments(fragmentTransaction);
 		switch (index) {
 		case 0:
-			arrangeOrderTextView.setTextColor(Color.parseColor("#87CEEB"));
+			arrangeOrderTextView.setTextColor(getResources().getColor(R.color.theme_color));
+			arrangeOrderImageView.setImageDrawable(getResources().getDrawable(R.drawable.order_pressed));
 			if (arrangeOrderFragment == null) {
 				arrangeOrderFragment = new ArrangeOrderFragment();
 				fragmentTransaction.add(R.id.content, arrangeOrderFragment);
@@ -231,7 +232,8 @@ public class AlinoneMainActivity extends ActionBarActivity{
 			}
 			break;
 		case 1:
-			personCenterTextView.setTextColor(Color.parseColor("#87CEEB"));
+			personCenterTextView.setTextColor(getResources().getColor(R.color.theme_color));
+			personCenterImageView.setImageDrawable(getResources().getDrawable(R.drawable.user_pressed));
 			if (personCenterFragment == null) {
 				personCenterFragment = new PersonCenterFragment();
 				fragmentTransaction.add(R.id.content, personCenterFragment);
@@ -248,6 +250,8 @@ public class AlinoneMainActivity extends ActionBarActivity{
 	private void clearTabSelection() {
 		arrangeOrderTextView.setTextColor(Color.parseColor("#000000"));
 		personCenterTextView.setTextColor(Color.parseColor("#000000"));
+		arrangeOrderImageView.setImageDrawable(getResources().getDrawable(R.drawable.order_unpressed));
+		personCenterImageView.setImageDrawable(getResources().getDrawable(R.drawable.user_unpressed));
 	}
 	
 	private void hideFragments(FragmentTransaction fragmentTransaction) {

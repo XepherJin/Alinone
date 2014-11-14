@@ -6,7 +6,6 @@ package com.retropoktan.alinone.alinoneDao;
  */
 public class Merchant {
 
-    private Long id;
     /** Not-null value. */
     private String merchantID;
     /** Not-null value. */
@@ -16,23 +15,14 @@ public class Merchant {
     public Merchant() {
     }
 
-    public Merchant(Long id) {
-        this.id = id;
+    public Merchant(String merchantID) {
+        this.merchantID = merchantID;
     }
 
-    public Merchant(Long id, String merchantID, String merchantName, int orderNum) {
-        this.id = id;
+    public Merchant(String merchantID, String merchantName, int orderNum) {
         this.merchantID = merchantID;
         this.merchantName = merchantName;
         this.orderNum = orderNum;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     /** Not-null value. */
