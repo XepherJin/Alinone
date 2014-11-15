@@ -15,6 +15,7 @@ import com.retropoktan.alinone.netutil.URLConstants;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,6 +121,7 @@ public class ForgetPasswordActivity extends Activity implements OnClickListener{
 								if (response.get("status").toString().equals("1")) {
 									Log.v("smsback", response.toString());
 									progressHUD.dismiss();
+									phoneNumAndNewPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 									changePasswordLayout.setVisibility(View.VISIBLE);
 									smsButton.setVisibility(view.GONE);
 									phoneNumAndNewPassword.setText("");
