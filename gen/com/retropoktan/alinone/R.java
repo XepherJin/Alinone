@@ -1090,34 +1090,35 @@ containing a value of this type.
         public static final int check_mark=0x7f02005a;
         public static final int commit_order_list=0x7f02005b;
         public static final int ic_launcher=0x7f02005c;
-        public static final int item_button_cancel=0x7f02005d;
-        public static final int item_button_commit=0x7f02005e;
-        public static final int launcher_button_background=0x7f02005f;
-        public static final int launcher_button_background_unpressed=0x7f020060;
-        public static final int launcher_button_pressed=0x7f020061;
-        public static final int order_pressed=0x7f020062;
-        public static final int order_unpressed=0x7f020063;
-        public static final int progress_hud_bg=0x7f020064;
-        public static final int progressbar_mini=0x7f020065;
-        public static final int qr_scan_line=0x7f020066;
-        public static final int refresh=0x7f020067;
-        public static final int scan_order_and_bind_merchant=0x7f020068;
-        public static final int scan_qr_code=0x7f020069;
-        public static final int spinner_0=0x7f02006a;
-        public static final int spinner_1=0x7f02006b;
-        public static final int spinner_10=0x7f02006c;
-        public static final int spinner_11=0x7f02006d;
-        public static final int spinner_2=0x7f02006e;
-        public static final int spinner_3=0x7f02006f;
-        public static final int spinner_4=0x7f020070;
-        public static final int spinner_5=0x7f020071;
-        public static final int spinner_6=0x7f020072;
-        public static final int spinner_7=0x7f020073;
-        public static final int spinner_8=0x7f020074;
-        public static final int spinner_9=0x7f020075;
-        public static final int task_process_dialog_background=0x7f020076;
-        public static final int user_pressed=0x7f020077;
-        public static final int user_unpressed=0x7f020078;
+        public static final int ic_menu_moreoverflow_normal_holo_light=0x7f02005d;
+        public static final int item_button_cancel=0x7f02005e;
+        public static final int item_button_commit=0x7f02005f;
+        public static final int launcher_button_background=0x7f020060;
+        public static final int launcher_button_background_unpressed=0x7f020061;
+        public static final int launcher_button_pressed=0x7f020062;
+        public static final int order_pressed=0x7f020063;
+        public static final int order_unpressed=0x7f020064;
+        public static final int progress_hud_bg=0x7f020065;
+        public static final int progressbar_mini=0x7f020066;
+        public static final int qr_scan_line=0x7f020067;
+        public static final int refresh=0x7f020068;
+        public static final int scan_order_and_bind_merchant=0x7f020069;
+        public static final int scan_qr_code=0x7f02006a;
+        public static final int spinner_0=0x7f02006b;
+        public static final int spinner_1=0x7f02006c;
+        public static final int spinner_10=0x7f02006d;
+        public static final int spinner_11=0x7f02006e;
+        public static final int spinner_2=0x7f02006f;
+        public static final int spinner_3=0x7f020070;
+        public static final int spinner_4=0x7f020071;
+        public static final int spinner_5=0x7f020072;
+        public static final int spinner_6=0x7f020073;
+        public static final int spinner_7=0x7f020074;
+        public static final int spinner_8=0x7f020075;
+        public static final int spinner_9=0x7f020076;
+        public static final int task_process_dialog_background=0x7f020077;
+        public static final int user_pressed=0x7f020078;
+        public static final int user_unpressed=0x7f020079;
     }
     public static final class id {
         public static final int about_chart=0x7f090040;
@@ -1375,8 +1376,9 @@ containing a value of this type.
  ActionBar styles 
          */
         public static final int MyActionBar=0x7f0b008c;
+        public static final int MyOverflowButton=0x7f0b008e;
         public static final int MyTitleStyle=0x7f0b008d;
-        public static final int ProgressHUD=0x7f0b008e;
+        public static final int ProgressHUD=0x7f0b008f;
         /**  Mimic text appearance in select_dialog_item.xml 
          */
         public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog=0x7f0b0063;

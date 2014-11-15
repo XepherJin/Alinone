@@ -221,7 +221,6 @@ public class ArrangeOrderFragment extends Fragment{
 		// TODO Auto-generated method stub
 		if (resultCode == Activity.RESULT_OK) {
 			readOrdersInfo();
-			Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
 		}
 		else if (resultCode == Activity.RESULT_CANCELED) {
 			readOrdersInfo();
@@ -268,7 +267,6 @@ public class ArrangeOrderFragment extends Fragment{
 					public void onSuccess(int statusCode, Header[] headers,
 							JSONObject response) {
 						// TODO Auto-generated method stub
-						Toast.makeText(getActivity().getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
 						dbService.deleteAllOrders();
 						orderList.clear();
 						adapter.notifyDataSetChanged();
@@ -310,7 +308,6 @@ public class ArrangeOrderFragment extends Fragment{
 	
 	public void commmitAllOrders(List<AlinoneOrder> arrayList) {
 		controlOrdersDelete(arrayList);
-		Toast.makeText(getActivity().getApplicationContext(), dbService.loadAllOrders().toString(), Toast.LENGTH_SHORT).show();
 		try {
 			JSONObject jsonObject = new JSONObject();
 			JSONArray jsonArray = new JSONArray();
@@ -336,7 +333,6 @@ public class ArrangeOrderFragment extends Fragment{
 					public void onSuccess(int statusCode, Header[] headers,
 							JSONObject response) {
 						// TODO Auto-generated method stub
-						Toast.makeText(getActivity().getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
 						dbService.deleteAllOrders();
 						orderList.clear();
 						adapter.notifyDataSetChanged();
@@ -363,7 +359,6 @@ public class ArrangeOrderFragment extends Fragment{
 							JSONObject response) {
 						// TODO Auto-generated method stub
 						Log.v("qqqqqqqqqqqqqqqqqq", response.toString());
-						Toast.makeText(getActivity().getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
 						dbService.deleteAllOrders();
 						orderList.clear();
 						adapter.notifyDataSetChanged();

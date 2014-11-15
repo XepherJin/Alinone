@@ -41,7 +41,6 @@ public class GPSService extends Service{
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		startService();
-        Toast.makeText(getApplicationContext(), "这里是：onCreate", 1000).show();  
 	}
 
 	@Override

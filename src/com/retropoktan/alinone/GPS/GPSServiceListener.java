@@ -36,6 +36,7 @@ public class GPSServiceListener implements LocationListener{
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
 		Log.d("gps", latitude + "" + longitude + "");
+		Toast.makeText(context, "正在获取当前位置", Toast.LENGTH_SHORT).show();
 		if (location != null) {
 			latitude = (float)location.getLatitude();
 			longitude = (float)location.getLongitude();
