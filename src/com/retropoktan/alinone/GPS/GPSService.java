@@ -12,8 +12,7 @@ import android.widget.Toast;
 
 public class GPSService extends Service{
 
-	private static final long minTime = 5000; // 5s
-	private static final float minDistance = 0.3f;
+	private static final long minTime = 30 * 1000; // 30s
 	String tag = this.toString();
 	private LocationManager locationManager;
 	private LocationListener locationListener;

@@ -35,8 +35,6 @@ public class GPSServiceListener implements LocationListener{
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
-		Log.d("gps", latitude + "" + longitude + "");
-		Toast.makeText(context, "正在获取当前位置", Toast.LENGTH_SHORT).show();
 		if (location != null) {
 			latitude = (float)location.getLatitude();
 			longitude = (float)location.getLongitude();
@@ -61,6 +59,7 @@ public class GPSServiceListener implements LocationListener{
 							// TODO Auto-generated method stub
 							try {
 								Log.v("status", response.toString());
+								Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
 								if (response.get("status").toString().equals("3")) {
 									JSONArray orderArray = ((JSONObject)response.get("body")).getJSONArray("orders_id");
 									for (int i = 0; i < orderArray.length(); i++) {
