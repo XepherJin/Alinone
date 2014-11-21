@@ -4,14 +4,19 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/arrange_order_listview_item"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:orientation="vertical" >
-
+        android:layout_marginBottom="5dp" >
+        
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical">
+            
             <TextView
                 android:id="@+id/address_textview"
                 android:layout_width="wrap_content"
@@ -27,7 +32,16 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:text="联系电话"/>
+        </LinearLayout>
+        
+        <ImageView
+            android:id="@+id/check_mark_for_order"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/check_mark_for_order" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

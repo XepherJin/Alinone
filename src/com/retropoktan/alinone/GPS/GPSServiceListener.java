@@ -58,8 +58,7 @@ public class GPSServiceListener implements LocationListener{
 								JSONObject response) {
 							// TODO Auto-generated method stub
 							try {
-								Log.v("status", response.toString());
-								Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+								//Log.v("status", response.toString());
 								if (response.get("status").toString().equals("3")) {
 									JSONArray orderArray = ((JSONObject)response.get("body")).getJSONArray("orders_id");
 									for (int i = 0; i < orderArray.length(); i++) {

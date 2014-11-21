@@ -1,6 +1,7 @@
 package com.retropoktan.alinone;
 
 public class MessageIDs {
+	
 	public static final int auto_focus = 1;
 	public static final int decode = 2;
 	public static final int decode_failed = 3;

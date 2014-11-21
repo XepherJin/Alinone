@@ -19,9 +19,12 @@ public class OrderListAdapter extends BaseAdapter{
 	public List<AlinoneOrder> orderList;
 	public LayoutInflater inflater;
 	
-	public OrderListAdapter(List<AlinoneOrder> orderList, Context context) {
+	public int[] checkList;
+	
+	public OrderListAdapter(List<AlinoneOrder> orderList, Context context, int[] checkList) {
 		super();
 		this.orderList = orderList;
+		this.checkList = checkList;
 		inflater = LayoutInflater.from(context);
 	}
 
@@ -40,7 +43,7 @@ public class OrderListAdapter extends BaseAdapter{
 	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		return 0;
+		return position;
 	}
 
 	@Override
@@ -52,6 +55,7 @@ public class OrderListAdapter extends BaseAdapter{
 			convertView = inflater.inflate(R.layout.order_listview_item, null);
 			viewHolder.addressTextView = (TextView)convertView.findViewById(R.id.address_textview);
 			viewHolder.phoneNumberTextView = (TextView)convertView.findViewById(R.id.phone_number_textview);
+			viewHolder.checkMarkImageView = (ImageView)convertView.findViewById(R.id.check_mark_for_order);
 			convertView.setTag(viewHolder);
 		}
 		else {
@@ -60,12 +64,19 @@ public class OrderListAdapter extends BaseAdapter{
 		AlinoneOrder order = (AlinoneOrder)orderList.get(position);
 		viewHolder.addressTextView.setText("派送地址：" + order.getOrderAddress());
 		viewHolder.phoneNumberTextView.setText("联系电话：" + order.getObjectPhone());
+		viewHolder.checkMarkImageView.setImageResource(R.drawable.check_mark_for_order);
+		if (checkList[position] == 1) {
+			viewHolder.checkMarkImageView.setVisibility(View.VISIBLE);
+		}
+		else {
+			viewHolder.checkMarkImageView.setVisibility(View.GONE);
+		}
 		return convertView;
 	}
 
 	private static class ViewHolder{
 		TextView addressTextView;
 		TextView phoneNumberTextView;
-		ImageView commitImageView;
+		ImageView checkMarkImageView;
 	}
 }

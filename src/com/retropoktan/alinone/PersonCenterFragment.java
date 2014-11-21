@@ -47,6 +47,7 @@ public class PersonCenterFragment extends Fragment{
 	
 	private DBService dbService;
 	
+	private TextView userNickName;
 	private TextView merchantName;
 	private TextView orderNum;
 	private Button bindMerchantButton;
@@ -72,6 +73,7 @@ public class PersonCenterFragment extends Fragment{
 		
 		View personCenterLayout = inflater.inflate(R.layout.person_center, container, false);
 		context = getActivity().getApplicationContext();
+		userNickName = (TextView)personCenterLayout.findViewById(R.id.user_nick_name_from_person_center);
 		initButton(personCenterLayout);
 		initListView(personCenterLayout);
 		return personCenterLayout;
@@ -91,6 +93,7 @@ public class PersonCenterFragment extends Fragment{
 	}
 	
 	private void initListView(View parentView) {
+		userNickName.setText("欢迎您！" + BaseApplication.getInstance().getNickName() + "！");
 		merchantListView = (ListView)parentView.findViewById(R.id.person_center_listview);
 		merchantName = (TextView)parentView.findViewById(R.id.merchant_name_text_view);
 		orderNum = (TextView)parentView.findViewById(R.id.order_num_textview);
@@ -149,13 +152,11 @@ public class PersonCenterFragment extends Fragment{
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
-
 				}
 			})
 			.setNegativeButton("取消", null)
 			.show();
 		}
-		
 	}
 	
 	@Override

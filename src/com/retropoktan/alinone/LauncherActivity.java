@@ -7,19 +7,10 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.retropoktan.alinone.hud.ProgressHUD;
-import com.retropoktan.alinone.netutil.HttpUtil;
-import com.retropoktan.alinone.netutil.URLConstants;
-
-import de.greenrobot.dao.internal.FastCursor;
-import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,12 +21,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.retropoktan.alinone.hud.ProgressHUD;
+import com.retropoktan.alinone.netutil.HttpUtil;
+import com.retropoktan.alinone.netutil.URLConstants;
+
 public class LauncherActivity extends Activity{
 	
 	private EditText userAccount;
 	private EditText userPassword;
 	private EditText verifyPassword;
 	private EditText smsVerify;
+	private EditText userNickName;
 	
 	private TimeCount timeCount;
 	
@@ -115,7 +112,8 @@ public class LauncherActivity extends Activity{
 							jsonObject.put("username", userAccount.getText().toString().trim());
 							jsonObject.put("password", userPassword.getText().toString().trim());
 							jsonObject.put("reg_code", smsVerify.getText().toString().trim());
-							StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+							jsonObject.put("nick", userNickName.getText().toString().trim());
+							StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject), "UTF-8");
 							HttpUtil.post(LauncherActivity.this, URLConstants.RegisterUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler() {
 
 								@Override
@@ -139,6 +137,8 @@ public class LauncherActivity extends Activity{
 											BaseApplication.getInstance().setPassword(userPassword.getText().toString());
 											BaseApplication.getInstance().setUserId(userAccount.getText().toString());
 											BaseApplication.getInstance().setPhoneNum(userAccount.getText().toString().trim());
+											// need to be fixed
+											BaseApplication.getInstance().setNickName(userNickName.getText().toString());
 											Intent intent = new Intent(LauncherActivity.this, AlinoneMainActivity.class);
 											intent.putExtra("activity_name", LauncherActivity.class.getSimpleName());
 											startActivity(intent);
@@ -209,6 +209,8 @@ public class LauncherActivity extends Activity{
 											BaseApplication.getInstance().setPhoneNum(userAccount.getText().toString().trim());
 											BaseApplication.getInstance().setPassword(userPassword.getText().toString().trim());
 											BaseApplication.getInstance().setUserId(userAccount.getText().toString().trim());
+											//need to be fixed
+											BaseApplication.getInstance().setNickName(jsonObject.get("nick").toString());
 											Intent intent = new Intent(LauncherActivity.this, AlinoneMainActivity.class);
 											intent.putExtra("activity_name", LauncherActivity.class.getSimpleName());
 											startActivity(intent);
@@ -299,6 +301,7 @@ public class LauncherActivity extends Activity{
 		}
 		verifyPassword = (EditText)view.findViewById(R.id.user_verify_password);
 		smsVerify = (EditText)view.findViewById(R.id.sms_verify);
+		userNickName = (EditText)view.findViewById(R.id.user_nick_name);
 	}
 	
 

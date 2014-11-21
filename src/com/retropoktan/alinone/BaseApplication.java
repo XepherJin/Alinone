@@ -24,11 +24,13 @@ public class BaseApplication extends Application{
 	public static final String USER_ID = "user_id";
 	public static final String TOKEN = "user_token";
 	public static final String PASSWORD = "password";
+	public static final String USER_NICK_NAME = "user_nick_name";
 	
 	private String password = null;
 	private String userID = null;
 	private String phoneNum = null;
 	private String token = null;
+	private String userNickName = null;
 	
 	@Override
 	public void onCreate() {
@@ -82,6 +84,14 @@ public class BaseApplication extends Application{
 		return token;
 	}
 	
+	public String getNickName() {
+		if (userNickName == null) {
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+			userNickName = sharedPreferences.getString(USER_NICK_NAME, null);
+		}
+		return userNickName;
+	}
+	
 	public void setUserId(String userID) {
 		if (userID != null) {
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
@@ -118,6 +128,16 @@ public class BaseApplication extends Application{
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			if (editor.putString(TOKEN, token).commit()) {
 				this.token = token;
+			}
+		}
+	}
+	
+	public void setNickName(String nickName) {
+		if (nickName != null) {
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			if (editor.putString(USER_NICK_NAME, nickName).commit()) {
+				this.userNickName = nickName;
 			}
 		}
 	}

@@ -35,5 +35,16 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/launcher_button_background"
         android:text="发送验证码" />
+    
+    <EditText 
+            android:id="@+id/user_nick_name"
+            android:layout_marginTop="10dp"
+            android:layout_width="fill_parent"
+            android:hint="昵称"
+            android:layout_below="@+id/sms_verify"
+            android:singleLine="true"
+            android:inputType="text"
+            android:layout_height="40dp"
+            android:background="@drawable/launcher_button_background_unpressed"/>
 
 </RelativeLayout>

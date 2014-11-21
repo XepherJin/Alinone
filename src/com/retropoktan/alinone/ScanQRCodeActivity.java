@@ -77,7 +77,7 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	
 	private ArrayList<String> qrCodeList = new ArrayList<String>();
 	
-	private int RESULT_OK_FOR_MERCHANT = 10;
+	private int RESULT_CANCEL_WITHOUT_BIND_ORDERS = 11;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -470,7 +470,7 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 											dbService.saveOrder(order);
 										}
 										Intent intent = new Intent(ScanQRCodeActivity.this, ArrangeOrderFragment.class);
-										setResult(RESULT_OK, intent);
+										setResult(RESULT_CANCEL_WITHOUT_BIND_ORDERS, intent);
 										ScanQRCodeActivity.this.finish();
 									}
 								} catch (Exception e) {
