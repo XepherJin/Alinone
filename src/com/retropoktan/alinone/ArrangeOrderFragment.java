@@ -65,6 +65,7 @@ public class ArrangeOrderFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		
 		View arrangeOrderLayout = inflater.inflate(R.layout.arrange_order, container, false);
 		initButton(arrangeOrderLayout);
 		initListView(arrangeOrderLayout);
@@ -77,6 +78,20 @@ public class ArrangeOrderFragment extends Fragment{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		dbService = DBService.getInstance(getActivity().getApplicationContext());
+		if (savedInstanceState != null) {
+			if (savedInstanceState.getBoolean("isHidden")) {
+				getFragmentManager().beginTransaction().hide(this).commit();
+			}
+		}
+	}
+	
+	
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("isHidden", true);
 	}
 
 	private void initButton(View parentView) {

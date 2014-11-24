@@ -64,6 +64,11 @@ public class PersonCenterFragment extends Fragment{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		dbService = DBService.getInstance(getActivity().getApplicationContext());
+		if (savedInstanceState != null) {
+			if (savedInstanceState.getBoolean("isHidden")) {
+				getFragmentManager().beginTransaction().hide(this).commit();
+			}
+		}
 	}
 
 	@Override
@@ -167,12 +172,23 @@ public class PersonCenterFragment extends Fragment{
 				readMerchantInfo();
 			}
 	}
+	
+	
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("isHidden", true);
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
 		inflater.inflate(R.menu.alinone_person_center, menu);
 	}
+	
+	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
