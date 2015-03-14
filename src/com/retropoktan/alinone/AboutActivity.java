@@ -49,7 +49,8 @@ public class AboutActivity extends Activity{
 		verifyPasswordChangeEditText = (EditText)findViewById(R.id.verify_password_to_change_from_about);
 		changePasswordButton = (Button)findViewById(R.id.change_new_password_from_about_button);
 		changePasswordChart = (LinearLayout)findViewById(R.id.change_password_chart);
-		checkForUpdate.setOnClickListener(new OnClickListener() { // check for update
+		checkForUpdate.setOnClickListener(new OnClickListener() { 
+			// check for update
 			
 			@Override
 			public void onClick(View v) {

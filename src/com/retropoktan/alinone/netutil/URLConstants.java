@@ -2,7 +2,7 @@ package com.retropoktan.alinone.netutil;
 
 public class URLConstants {
 
-	public static final String BasicUrl = "http://121.41.169.114";
+	public static final String BasicUrl = "http://www.alinone.cn";
 	public static final String ApiUrl = BasicUrl + "/api/v1";
 	public static final String LoginUrl = ApiUrl + "/sender/login";
 	public static final String RegisterUrl = ApiUrl + "/sender/register";
@@ -16,6 +16,7 @@ public class URLConstants {
 	public static final String FinishOrdersUrl = ApiUrl + "/sender/finish_orders";
 	public static final String GPSUploadUrl = ApiUrl + "/sender/gps_renew";
 	public static final String PersonInfoUrl = ApiUrl + "/sender/info";
+	public static final String TodayPersonInfo = ApiUrl + "/sender/get_today_info";
 	public static final String ChangePasswordUrl = ApiUrl + "/sender/change_password";
 	public static final String GetBindOrdersUrl = ApiUrl + "/sender/get_bind_orders";
 	public static final String ContentTypeJson = "application/json";

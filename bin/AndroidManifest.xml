@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.retropoktan.alinone"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.1" >
 
     <uses-permission android:name="android.permission.CAMERA"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
@@ -41,8 +41,8 @@
         </activity>
         <activity
             android:name=".AlinoneMainActivity"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:label="@string/app_name" >
         </activity>
         <activity 

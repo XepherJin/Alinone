@@ -1,31 +1,40 @@
 package com.retropoktan.alinone.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
-
-import com.retropoktan.alinone.PersonCenterFragment;
-import com.retropoktan.alinone.R;
-import com.retropoktan.alinone.R.string;
-import com.retropoktan.alinone.alinoneDao.Merchant;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.retropoktan.alinone.PersonCenterFragment.OnRefreshTodayOrder;
+import com.retropoktan.alinone.R;
+import com.retropoktan.alinone.alinoneDao.Merchant;
+import com.retropoktan.alinone.qrcode.view.AlinoneListView;
+
 public class PersonCenterAdapter extends BaseAdapter{
 
 	public static final String TAG = PersonCenterAdapter.class.getSimpleName();
 	public List<Merchant> merchantListData;
 	public LayoutInflater inflater;
-	
+	private Context mContext;
+
+	public List<Merchant> getMerchantListData() {
+		return merchantListData;
+	}
+
+	public void setMerchantListData(List<Merchant> merchantListData) {
+		this.merchantListData = merchantListData;
+	}
+
 	public PersonCenterAdapter(List<Merchant> merchantListData, Context context) {
 		super();
 		this.merchantListData = merchantListData;
 		inflater = LayoutInflater.from(context);
+		mContext = context;
 	}
 
 	@Override
@@ -55,19 +64,34 @@ public class PersonCenterAdapter extends BaseAdapter{
 			convertView = inflater.inflate(R.layout.person_center_listview_item, null);
 			holder.merchantNameTextView = (TextView)convertView.findViewById(R.id.merchant_name_text_view);
 			holder.orderNumTextView = (TextView)convertView.findViewById(R.id.order_num_textview);
+			holder.listView = (AlinoneListView)convertView.findViewById(R.id.today_order_listview);
 			convertView.setTag(holder);
 		}
 		else {
 			holder = (ViewHolder)convertView.getTag();
 		}
-		Merchant merchant = (Merchant)merchantListData.get(position);
-		holder.merchantNameTextView.setText(merchant.getMerchantName());
-		holder.orderNumTextView.setText("累计派送 " + merchant.getOrderNum() + " 单");
+		if (merchantListData.size() > 0) {
+			Merchant merchant = (Merchant)merchantListData.get(position);
+			if (!merchant.getTodayDishes().isEmpty()) {
+				holder.listView.setAdapter(new TodayOrderAdapter(merchant.getTodayDishes(), mContext));
+				holder.orderNumTextView.setVisibility(View.GONE);
+				holder.merchantNameTextView.setText(merchant.getMerchantName() + "(今日共派送" + merchant.getTodayDishes().size() + "单)");
+			}
+			else {
+				holder.merchantNameTextView.setText(merchant.getMerchantName());
+				holder.orderNumTextView.setVisibility(View.VISIBLE);
+			}
+		}
+		else {
+			holder.merchantNameTextView.setText("暂无绑定商家！");
+		}
 		return convertView;
 	}
 
 	private static class ViewHolder{
 		TextView merchantNameTextView;
 		TextView orderNumTextView;
+		AlinoneListView listView;
 	}
+	
 }

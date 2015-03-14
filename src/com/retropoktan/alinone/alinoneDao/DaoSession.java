@@ -18,10 +18,14 @@ import de.greenrobot.dao.internal.DaoConfig;
 public class DaoSession extends AbstractDaoSession {
 
     private final DaoConfig alinoneOrderDaoConfig;
+    private final DaoConfig dishDaoConfig;
     private final DaoConfig merchantDaoConfig;
+    private final DaoConfig todayOrderDaoConfig;
 
     private final AlinoneOrderDao alinoneOrderDao;
+    private final DishDao dishDao;
     private final MerchantDao merchantDao;
+    private final TodayOrderDao todayOrderDao;
 
     public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -30,27 +34,47 @@ public class DaoSession extends AbstractDaoSession {
         alinoneOrderDaoConfig = daoConfigMap.get(AlinoneOrderDao.class).clone();
         alinoneOrderDaoConfig.initIdentityScope(type);
 
+        dishDaoConfig = daoConfigMap.get(DishDao.class).clone();
+        dishDaoConfig.initIdentityScope(type);
+
         merchantDaoConfig = daoConfigMap.get(MerchantDao.class).clone();
         merchantDaoConfig.initIdentityScope(type);
 
+        todayOrderDaoConfig = daoConfigMap.get(TodayOrderDao.class).clone();
+        todayOrderDaoConfig.initIdentityScope(type);
+
         alinoneOrderDao = new AlinoneOrderDao(alinoneOrderDaoConfig, this);
+        dishDao = new DishDao(dishDaoConfig, this);
         merchantDao = new MerchantDao(merchantDaoConfig, this);
+        todayOrderDao = new TodayOrderDao(todayOrderDaoConfig, this);
 
         registerDao(AlinoneOrder.class, alinoneOrderDao);
+        registerDao(Dish.class, dishDao);
         registerDao(Merchant.class, merchantDao);
+        registerDao(TodayOrder.class, todayOrderDao);
     }
     
     public void clear() {
         alinoneOrderDaoConfig.getIdentityScope().clear();
+        dishDaoConfig.getIdentityScope().clear();
         merchantDaoConfig.getIdentityScope().clear();
+        todayOrderDaoConfig.getIdentityScope().clear();
     }
 
     public AlinoneOrderDao getAlinoneOrderDao() {
         return alinoneOrderDao;
     }
 
+    public DishDao getDishDao() {
+        return dishDao;
+    }
+
     public MerchantDao getMerchantDao() {
         return merchantDao;
+    }
+
+    public TodayOrderDao getTodayOrderDao() {
+        return todayOrderDao;
     }
 
 }

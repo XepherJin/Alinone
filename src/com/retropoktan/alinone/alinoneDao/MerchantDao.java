@@ -25,6 +25,8 @@ public class MerchantDao extends AbstractDao<Merchant, String> {
         public final static Property OrderNum = new Property(2, int.class, "orderNum", false, "ORDER_NUM");
     };
 
+    private DaoSession daoSession;
+
 
     public MerchantDao(DaoConfig config) {
         super(config);
@@ -32,6 +34,7 @@ public class MerchantDao extends AbstractDao<Merchant, String> {
     
     public MerchantDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -56,6 +59,12 @@ public class MerchantDao extends AbstractDao<Merchant, String> {
         stmt.bindString(1, entity.getMerchantID());
         stmt.bindString(2, entity.getMerchantName());
         stmt.bindLong(3, entity.getOrderNum());
+    }
+
+    @Override
+    protected void attachEntity(Merchant entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */

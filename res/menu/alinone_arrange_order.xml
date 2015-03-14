@@ -9,7 +9,7 @@
     
     <item  
         android:id="@+id/scan_qr_code_from_arrange_order"  
-        android:icon="@drawable/scan_qr_code"  
+        android:icon="@drawable/scan_qr_code"
         Alinone:showAsAction="always"  
         android:title="扫一扫"/>  
 

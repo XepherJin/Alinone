@@ -25,7 +25,12 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, String> {
         public final static Property OrderAddress = new Property(2, String.class, "orderAddress", false, "ORDER_ADDRESS");
         public final static Property MerchantID = new Property(3, String.class, "merchantID", false, "MERCHANT_ID");
         public final static Property OrderTime = new Property(4, java.util.Date.class, "orderTime", false, "ORDER_TIME");
+        public final static Property MerchantName = new Property(5, String.class, "merchantName", false, "MERCHANT_NAME");
+        public final static Property Paid = new Property(6, boolean.class, "paid", false, "PAID");
+        public final static Property Price = new Property(7, float.class, "price", false, "PRICE");
     };
+
+    private DaoSession daoSession;
 
 
     public AlinoneOrderDao(DaoConfig config) {
@@ -34,6 +39,7 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, String> {
     
     public AlinoneOrderDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -44,7 +50,10 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, String> {
                 "'OBJECT_PHONE' TEXT NOT NULL ," + // 1: objectPhone
                 "'ORDER_ADDRESS' TEXT NOT NULL ," + // 2: orderAddress
                 "'MERCHANT_ID' TEXT NOT NULL ," + // 3: merchantID
-                "'ORDER_TIME' INTEGER NOT NULL );"); // 4: orderTime
+                "'ORDER_TIME' INTEGER NOT NULL ," + // 4: orderTime
+                "'MERCHANT_NAME' TEXT NOT NULL ," + // 5: merchantName
+                "'PAID' INTEGER NOT NULL ," + // 6: paid
+                "'PRICE' REAL NOT NULL );"); // 7: price
     }
 
     /** Drops the underlying database table. */
@@ -62,6 +71,15 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, String> {
         stmt.bindString(3, entity.getOrderAddress());
         stmt.bindString(4, entity.getMerchantID());
         stmt.bindLong(5, entity.getOrderTime().getTime());
+        stmt.bindString(6, entity.getMerchantName());
+        stmt.bindLong(7, entity.getPaid() ? 1l: 0l);
+        stmt.bindDouble(8, entity.getPrice());
+    }
+
+    @Override
+    protected void attachEntity(AlinoneOrder entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -78,7 +96,10 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, String> {
             cursor.getString(offset + 1), // objectPhone
             cursor.getString(offset + 2), // orderAddress
             cursor.getString(offset + 3), // merchantID
-            new java.util.Date(cursor.getLong(offset + 4)) // orderTime
+            new java.util.Date(cursor.getLong(offset + 4)), // orderTime
+            cursor.getString(offset + 5), // merchantName
+            cursor.getShort(offset + 6) != 0, // paid
+            cursor.getFloat(offset + 7) // price
         );
         return entity;
     }
@@ -91,6 +112,9 @@ public class AlinoneOrderDao extends AbstractDao<AlinoneOrder, String> {
         entity.setOrderAddress(cursor.getString(offset + 2));
         entity.setMerchantID(cursor.getString(offset + 3));
         entity.setOrderTime(new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setMerchantName(cursor.getString(offset + 5));
+        entity.setPaid(cursor.getShort(offset + 6) != 0);
+        entity.setPrice(cursor.getFloat(offset + 7));
      }
     
     /** @inheritdoc */

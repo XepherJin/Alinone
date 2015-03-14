@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/main_page_layout_selector"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -17,16 +18,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textSize="18sp"
-                android:text="商家名称"/>
+                android:textSize="16sp"
+                android:text="商家名称(今日共派送0单)"/>
 
             <TextView
                 android:id="@+id/order_num_textview"
                 android:layout_marginLeft="10dp"
-                android:textSize="18sp"
+                android:textSize="13sp"
                 android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
-                android:text="累计派送 0 单"/>
+                android:text="今日暂无订单派送！"/>
+            
+            <com.retropoktan.alinone.qrcode.view.AlinoneListView
+                android:id="@+id/today_order_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:listSelector="@android:color/transparent">
+            </com.retropoktan.alinone.qrcode.view.AlinoneListView>
 
     </LinearLayout>
 

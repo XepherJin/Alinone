@@ -10,11 +10,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.Manifest.permission;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -34,10 +36,10 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.retropoktan.alinone.adapter.PersonCenterAdapter;
-import com.retropoktan.alinone.alinoneDao.Constants;
+import com.retropoktan.alinone.adapter.TodayOrderAdapter;
 import com.retropoktan.alinone.alinoneDao.DBService;
-import com.retropoktan.alinone.alinoneDao.DaoMaster.DevOpenHelper;
 import com.retropoktan.alinone.alinoneDao.Merchant;
+import com.retropoktan.alinone.alinoneDao.TodayOrder;
 import com.retropoktan.alinone.netutil.HttpUtil;
 import com.retropoktan.alinone.netutil.URLConstants;
 public class PersonCenterFragment extends Fragment{
@@ -55,9 +57,9 @@ public class PersonCenterFragment extends Fragment{
 	private Context context;
 	
 	private List<Merchant> merchantList;
-	
+	private List<TodayOrder> todayOrderList;
 	private int REQUEST_CODE = 1;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -84,6 +86,10 @@ public class PersonCenterFragment extends Fragment{
 		return personCenterLayout;
 	}
 	
+	public interface OnRefreshTodayOrder{
+		public void refresh();
+	}
+	
 	private void initButton(View parentView) {
 		bindMerchantButton = (Button)parentView.findViewById(R.id.bind_merchant_button);
 		bindMerchantButton.setOnClickListener(new OnClickListener() {
@@ -103,6 +109,7 @@ public class PersonCenterFragment extends Fragment{
 		merchantName = (TextView)parentView.findViewById(R.id.merchant_name_text_view);
 		orderNum = (TextView)parentView.findViewById(R.id.order_num_textview);
 		merchantList = new ArrayList<Merchant>();
+		todayOrderList = new ArrayList<TodayOrder>();
 		readMerchantInfo();
 		getMerchantInfo();
 	}
@@ -211,7 +218,7 @@ public class PersonCenterFragment extends Fragment{
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("private_token", BaseApplication.getInstance().getToken());
 			StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
-			HttpUtil.post(getActivity().getApplicationContext(), URLConstants.PersonInfoUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler() {
+			HttpUtil.post(getActivity().getApplicationContext(), URLConstants.TodayPersonInfo, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler() {
 
 				@Override
 				public void onFailure(int statusCode, Header[] headers,
@@ -227,14 +234,19 @@ public class PersonCenterFragment extends Fragment{
 					try {
 						if (response.get("status").toString().equals("1")) {
 							JSONArray jsonArray = ((JSONObject)response.get("body")).getJSONArray("merchants");
-							Log.v("jsonarray", jsonArray.toString());
 							dbService.deleteAllMerchants();
+							dbService.deleteAllTodayOrders();
 							merchantList.clear();
+							todayOrderList.clear();
 							for (int i = 0; i < jsonArray.length(); i++) {
 								JSONObject jsonObject = jsonArray.getJSONObject(i);
-								Merchant merchant = new Merchant(jsonObject.get("merchant_id").toString(), jsonObject.get("merchant_name").toString(), Integer.parseInt(jsonObject.get("sended").toString()));
+								JSONArray sendedJsonArray = jsonObject.getJSONArray("sended");
+								Log.v("teset", sendedJsonArray.toString());
+								todayOrderList.clear();
+								Merchant merchant = new Merchant(jsonObject.get("merchant_id").toString(), jsonObject.get("merchant_name").toString(), sendedJsonArray.length());
 								merchantList.add(merchant);
 								dbService.saveMerchant(merchant);
+								getTodayOrder(sendedJsonArray, todayOrderList, merchant);
 							}
 							if (merchantList.size() > 0) {
 								bindMerchantButton.setVisibility(View.GONE);
@@ -242,7 +254,8 @@ public class PersonCenterFragment extends Fragment{
 							else {
 								bindMerchantButton.setVisibility(View.VISIBLE);
 							}
-							adapter.notifyDataSetChanged();
+							adapter.setMerchantListData(merchantList);
+							merchantListView.setAdapter(adapter);
 						}
 						else {
 							Toast.makeText(context, "获取信息失败", Toast.LENGTH_SHORT).show();
@@ -271,6 +284,27 @@ public class PersonCenterFragment extends Fragment{
 		}
 		adapter = new PersonCenterAdapter(merchantList, getActivity());
 		merchantListView.setAdapter(adapter);
-		merchantListView.setOnItemClickListener(new MerchantListOnItemCLickListener());
+		//merchantListView.setOnItemClickListener(new MerchantListOnItemCLickListener());
+	}
+	
+	private void getTodayOrder(JSONArray jsonArray, List<TodayOrder> list, Merchant merchant) {
+		try {
+			list.clear();
+			if (jsonArray.length() > 0) {
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					Log.v("list", list.toString());
+					TodayOrder todayOrder = new TodayOrder(jsonObject.getString("alin_id"), jsonObject.getInt("platform"), jsonObject.getBoolean("online_pay"), 
+							jsonObject.getString("phone"), Float.valueOf(jsonObject.get("price").toString()), jsonObject.getString("send_time"), 0, merchant.getMerchantID());
+					list.add(todayOrder);
+					Log.v("oderasdasdasd", list.toString());
+				}
+				dbService.saveTodayDishes(list, merchant);
+			}
+		}
+		catch (JSONException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 }

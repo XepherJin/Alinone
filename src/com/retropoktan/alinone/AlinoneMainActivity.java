@@ -66,12 +66,36 @@ public class AlinoneMainActivity extends ActionBarActivity{
 		initImageView();
 		initBottomTabBar();
 		index = 0;
-		setTabSelection(index);
+		if (savedInstanceState == null) {
+			setTabSelection(index);
+		}
+		else {
+			arrangeOrderFragment = (ArrangeOrderFragment)fragmentManager.findFragmentByTag("order");
+			personCenterFragment = (PersonCenterFragment)fragmentManager.findFragmentByTag("person");
+			if (savedInstanceState.getBoolean("order")) {
+				setTabSelection(0);
+			}
+			else if (savedInstanceState.getBoolean("person")) {
+				setTabSelection(1);
+			}
+		}
 		if (getIntent().getExtras() == null) {
 			checkUser();
 		}
 	}
 	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		if (arrangeOrderFragment != null) {
+			outState.putBoolean("order", !arrangeOrderFragment.isHidden());
+		}
+		if (personCenterFragment != null) {
+			outState.putBoolean("person", !personCenterFragment.isHidden());
+		}
+	}
+
 	private void initBottomTabBar() {
 		arrangeOrderLinearLayout = (LinearLayout)findViewById(R.id.arrange_order);
 		personCenterLinearLayout = (LinearLayout)findViewById(R.id.person_center);
@@ -144,7 +168,7 @@ public class AlinoneMainActivity extends ActionBarActivity{
 			jsonObject.put("username", BaseApplication.getInstance().getPhoneNum());
 			jsonObject.put("password", BaseApplication.getInstance().getPassword());
 			StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
-			HttpUtil.post(AlinoneMainActivity.this, URLConstants.LoginUrl, stringEntity, URLConstants.ContentTypeJson,new JsonHttpResponseHandler() {
+			HttpUtil.post(AlinoneMainActivity.this, URLConstants.LoginUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler() {
 
 				@Override
 				public void onFailure(int statusCode,
@@ -211,6 +235,7 @@ public class AlinoneMainActivity extends ActionBarActivity{
 	protected void onRestart() {
 		// TODO Auto-generated method stub
 		super.onRestart();
+		openGPSSettings();
 		checkUser();
 	}
 
@@ -225,7 +250,7 @@ public class AlinoneMainActivity extends ActionBarActivity{
 			arrangeOrderImageView.setImageDrawable(getResources().getDrawable(R.drawable.order_pressed));
 			if (arrangeOrderFragment == null) {
 				arrangeOrderFragment = new ArrangeOrderFragment();
-				fragmentTransaction.add(R.id.content, arrangeOrderFragment);
+				fragmentTransaction.add(R.id.content, arrangeOrderFragment, "order");
 			}
 			else {
 				fragmentTransaction.show(arrangeOrderFragment);
@@ -236,7 +261,7 @@ public class AlinoneMainActivity extends ActionBarActivity{
 			personCenterImageView.setImageDrawable(getResources().getDrawable(R.drawable.user_pressed));
 			if (personCenterFragment == null) {
 				personCenterFragment = new PersonCenterFragment();
-				fragmentTransaction.add(R.id.content, personCenterFragment);
+				fragmentTransaction.add(R.id.content, personCenterFragment, "person");
 			}
 			else {
 				fragmentTransaction.show(personCenterFragment);

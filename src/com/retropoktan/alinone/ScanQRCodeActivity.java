@@ -43,6 +43,7 @@ import com.google.zxing.Result;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.retropoktan.alinone.alinoneDao.AlinoneOrder;
 import com.retropoktan.alinone.alinoneDao.DBService;
+import com.retropoktan.alinone.alinoneDao.Dish;
 import com.retropoktan.alinone.alinoneDao.Merchant;
 import com.retropoktan.alinone.hud.ProgressHUD;
 import com.retropoktan.alinone.netutil.HttpUtil;
@@ -76,6 +77,8 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	CameraManager cameraManager;
 	
 	private ArrayList<String> qrCodeList = new ArrayList<String>();
+	
+	private ArrayList<Dish> dishList = new ArrayList<Dish>();
 	
 	private int RESULT_CANCEL_WITHOUT_BIND_ORDERS = 11;
 
@@ -451,24 +454,41 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 										JSONArray orderArray = ((JSONObject)response.get("body")).getJSONArray("bind_list");
 										for (int i = 0; i < orderArray.length(); i++) {
 											JSONObject orderObject = orderArray.getJSONObject(i);
-											Log.d("one order", orderObject.toString());
-											AlinoneOrder order = new AlinoneOrder(orderObject.get("order_id").toString(), orderObject.get("phone").toString(), orderObject.get("address").toString().trim(), orderObject.get("merchant_id").toString(), new Date());
+											JSONArray dishArray = orderObject.getJSONArray("dish_list");
+											for (int j = 0; j < dishArray.length(); j++) {
+												JSONObject dishObject = dishArray.getJSONObject(j);
+												Dish dish = new Dish(dishObject.getString("name"), dishObject.getInt("count"), Float.valueOf(dishObject.get("price").toString()), qrCodeList.get(i).toString());
+												dishList.add(dish);
+											}
+											AlinoneOrder order = new AlinoneOrder(orderObject.get("order_id").toString(), orderObject.get("phone").toString(), orderObject.get("address").toString(), orderObject.get("merchant_id").toString(), new Date(),
+													orderObject.getString("name"), orderObject.getBoolean("if_pay"), Float.valueOf(orderObject.get("price").toString()));
 											dbService.saveOrder(order);
+											Log.d("teset", dishList.toString());
+											dbService.saveDishLists(dishList, order);
 										}
 										Toast.makeText(getApplicationContext(), "绑定成功", Toast.LENGTH_SHORT).show();
 										Intent intent = new Intent(ScanQRCodeActivity.this, ArrangeOrderFragment.class);
 										setResult(RESULT_OK, intent);
 										ScanQRCodeActivity.this.finish();
 									}
-									else {
+									else if (hasSurface) {
 										Toast.makeText(getApplicationContext(), "绑定出错", Toast.LENGTH_SHORT).show();
 										JSONArray orderArray = ((JSONObject)response.get("body")).getJSONArray("bind_list");
 										Log.d("dbservice", orderArray.toString());
 										for (int i = 0; i < orderArray.length(); i++) {
 											JSONObject orderObject = orderArray.getJSONObject(i);
-											AlinoneOrder order = new AlinoneOrder(orderObject.get("order_id").toString(), orderObject.get("phone").toString(), orderObject.get("address").toString(), orderObject.get("merchant_id").toString(), new Date());
+											JSONArray dishArray = orderObject.getJSONArray("dish_list");
+											for (int j = 0; j < dishArray.length(); j++) {
+												JSONObject dishObject = dishArray.getJSONObject(j);
+												Dish dish = new Dish(dishObject.getString("name"), dishObject.getInt("count"), Float.valueOf(dishObject.get("price").toString()), qrCodeList.get(i).toString());
+												dishList.add(dish);
+											}
+											AlinoneOrder order = new AlinoneOrder(orderObject.get("order_id").toString(), orderObject.get("phone").toString(), orderObject.get("address").toString(), orderObject.get("merchant_id").toString(), new Date(),
+													orderObject.getString("name"), orderObject.getBoolean("if_pay"), Float.valueOf(orderObject.get("price").toString()));
 											dbService.saveOrder(order);
+											dbService.saveDishLists(dishList, order);
 										}
+										dishList.clear();
 										Intent intent = new Intent(ScanQRCodeActivity.this, ArrangeOrderFragment.class);
 										setResult(RESULT_CANCEL_WITHOUT_BIND_ORDERS, intent);
 										ScanQRCodeActivity.this.finish();

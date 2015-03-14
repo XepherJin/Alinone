@@ -2,16 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:background="@drawable/main_page_layout_selector"
+    android:orientation="horizontal" >
 
     <RelativeLayout
         android:id="@+id/arrange_order_listview_item"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" >
+        android:layout_weight="1"
+        android:layout_marginTop="5dp" >
         
         <LinearLayout 
+            android:id="@+id/content_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
@@ -22,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="派送地址"/>
 
             <TextView
@@ -30,18 +32,35 @@
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="联系电话"/>
+            
         </LinearLayout>
         
-        <ImageView
+        <TextView
+            android:id="@+id/whether_paid_mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/content_layout"
+            android:textSize="16sp"
+            android:text="已付" />
+        
+        <TextView
+            android:id="@+id/dish_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/content_layout"
+            android:layout_marginLeft="40dp"
+            android:textSize="16sp"
+            android:text="预订餐品"/>
+    </RelativeLayout>
+    
+    	<ImageView
             android:id="@+id/check_mark_for_order"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical|right"
             android:background="@drawable/check_mark_for_order" />
-
-    </RelativeLayout>
 
 </LinearLayout>

@@ -176,8 +176,8 @@ public class LauncherActivity extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (isSignUp == 0) {
-					if (userAccount.getText().toString().trim().length() != 11) {
-						Toast.makeText(LauncherActivity.this, "请正确填写手机号码", Toast.LENGTH_SHORT).show();
+					if (userAccount.getText().toString().trim().length() != 11 || userPassword.getText().toString().trim().length() <= 0) {
+						Toast.makeText(LauncherActivity.this, "请正确填写登录信息", Toast.LENGTH_SHORT).show();
 					}
 					else {
 						try {

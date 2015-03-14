@@ -13,6 +13,8 @@ public class DBService {
 	private DaoSession mDaoSession;
 	private AlinoneOrderDao AlinoneOrderDao;
 	private MerchantDao merchantDao;
+	private DishDao dishDao;
+	private TodayOrderDao todayOrderDao;
 
 	public static DBService getInstance(Context context) {
 		if (instance == null) {
@@ -23,6 +25,8 @@ public class DBService {
 			instance.mDaoSession = BaseApplication.getDaoSession(context);
 			instance.AlinoneOrderDao = instance.mDaoSession.getAlinoneOrderDao();
 			instance.merchantDao = instance.mDaoSession.getMerchantDao();
+			instance.dishDao = instance.mDaoSession.getDishDao();
+			instance.todayOrderDao = instance.mDaoSession.getTodayOrderDao();
 		}
 		return instance;
 	}
@@ -99,5 +103,67 @@ public class DBService {
 	
 	public void deleteMerchant(Merchant merchant) {
 		merchantDao.delete(merchant);
+	}
+	
+	public long saveDish(Dish dish, AlinoneOrder order) {
+		dish.setOrderId(order.getOrderID());
+		return dishDao.insert(dish);
+	}
+	
+	public void saveDishLists(final List<Dish> list, final AlinoneOrder order) {
+		if (list == null | list.isEmpty() || order == null) {
+			return;
+		}
+		dishDao.getSession().runInTx(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				for (int i = 0; i < list.size(); i++) {
+					Dish dish = list.get(i);
+					dish.setOrderId(order.getOrderID());
+					dishDao.insert(dish);
+				}
+			}
+		});
+	}
+	
+	public void deleteDishFromOrder(Dish dish) {
+		mDaoSession.delete(dish);
+	}
+	
+	public void deleteDishesFromOrder(AlinoneOrder order) {
+		order.resetDishes();
+	}
+	
+	public void deleteAllDishes() {
+		dishDao.deleteAll();
+	}
+	
+	public void saveTodayDishes(final List<TodayOrder> list, final Merchant merchant) {
+		if (list == null || list.isEmpty() || merchant == null) {
+			return;
+		}
+		todayOrderDao.getSession().runInTx(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				for (int i = 0; i < list.size(); i++) {
+					TodayOrder todayOrder = list.get(i);
+					todayOrder.setMerchantId(merchant.getMerchantID());
+					todayOrderDao.insertOrReplace(todayOrder);
+				}
+				
+			}
+		});
+	}
+	
+	public void deleteAllTodayOrders() {
+		todayOrderDao.deleteAll();
+	}
+	
+	public void deleteTodayOrdersFromMerchant(Merchant merchant) {
+		merchant.resetTodayDishes();
 	}
 }

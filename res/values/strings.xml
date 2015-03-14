@@ -7,5 +7,6 @@
     
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
     <color name="theme_color">#2a9dff</color>
+    <drawable name="base_pressed">#eeeeee</drawable>
 
 </resources>

@@ -9,11 +9,11 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,6 +36,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.retropoktan.alinone.adapter.OrderListAdapter;
 import com.retropoktan.alinone.alinoneDao.AlinoneOrder;
 import com.retropoktan.alinone.alinoneDao.DBService;
+import com.retropoktan.alinone.alinoneDao.Dish;
+import com.retropoktan.alinone.alinoneDao.isMarked;
 import com.retropoktan.alinone.netutil.HttpUtil;
 import com.retropoktan.alinone.netutil.URLConstants;
 
@@ -52,9 +53,12 @@ public class ArrangeOrderFragment extends Fragment{
 	
 	private ImageView checkMarkImageView;
 	
-	private List<AlinoneOrder> orderList = new ArrayList<AlinoneOrder>();
+	public List<AlinoneOrder> orderList = new ArrayList<AlinoneOrder>();
+	private List<Dish> dishList;
 	
-	private int[] checkList;
+	public List<isMarked> checkList;
+	
+	private int isExpanded;
 	
 	private ArrayList<String> qrCodeList = new ArrayList<String>();
 	
@@ -112,101 +116,22 @@ public class ArrangeOrderFragment extends Fragment{
 		addressTextView = (TextView)parentView.findViewById(R.id.address_textview);
 		phoneNumberTextView = (TextView)parentView.findViewById(R.id.phone_number_textview);
 		orderList = new ArrayList<AlinoneOrder>();
-		getBindOrders();
+		dishList = new ArrayList<Dish>();
+		checkList = new ArrayList<isMarked>();
 		readOrdersInfo();
+		getBindOrders();
 	}
 	
-	class OrderStatusChangeOnItemLongClickListener implements OnItemLongClickListener{
-
-		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-				int arg2, long arg3) {
-			// TODO Auto-generated method stub
-			final AlinoneOrder order = ((AlinoneOrder)orderList.get(arg2));
-			new AlertDialog.Builder(getActivity())
-			.setTitle("操作订单")
-			.setItems(new String[]{"配送完成", "撤销订单"}, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					switch (which) {
-					case 0:
-						commitOneOrder(order);
-						adapter.notifyDataSetChanged();
-						if (orderList.size() <= 0) {
-							Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
-							commmitAllOrders();
-							addOrderButton.setVisibility(View.VISIBLE);
-						}
-						break;
-					case 1:
-						orderList.remove(order);
-						adapter.notifyDataSetChanged();
-						if (orderList.size() <= 0) {
-							Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
-							commmitAllOrders();
-							addOrderButton.setVisibility(View.VISIBLE);
-						}
-						break;
-					default:
-						break;
-					}
-				}
-			}).setNegativeButton("取消", null)
-			.show();
-			return true;
-		}
+	public void cancelOrder(AlinoneOrder order) {
+		dbService.deleteDishesFromOrder(order);
+		dbService.deleteOrder(order);
 		
 	}
 	
-	class OrdersOnItemClickListener implements OnItemClickListener{
-
-		@Override
-		public void onItemClick(AdapterView<?> arg0, final View arg1, final int arg2,
-				long arg3) {
-			// TODO Auto-generated method stub
-			final String phoneString = ((AlinoneOrder)orderList.get(arg2)).getObjectPhone().toString();
-			new AlertDialog.Builder(getActivity())
-			.setTitle("选择联系方式")
-			.setItems(new String[]{"打电话", "发短信"}, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					switch (which) {
-					case 0:
-						Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneString));
-						startActivity(intent);
-						checkMarkImageView = (ImageView)arg1.findViewById(R.id.check_mark_for_order);
-						checkMarkImageView.setVisibility(View.VISIBLE);
-						checkList[arg2] = 1;
-						adapter.notifyDataSetChanged();
-						break;
-					case 1:
-						sendSMS(phoneString, "同学~你的外卖到了~请前来领取~~");
-						checkMarkImageView = (ImageView)arg1.findViewById(R.id.check_mark_for_order);
-						checkMarkImageView.setVisibility(View.VISIBLE);
-						checkList[arg2] = 1;
-						adapter.notifyDataSetChanged();
-						break;
-					default:
-						break;
-					}
-				}
-			}).setNegativeButton("取消", null)
-			.show();
-		}
-		
+	public void setAddOrderButtonShow() {
+		addOrderButton.setVisibility(View.VISIBLE);
 	}
 	
-	public void sendSMS(String phoneNumber, String content) {
-		Uri smsUri = Uri.parse("smsto:" + phoneNumber);
-		Intent intent = new Intent(Intent.ACTION_SENDTO, smsUri);
-		intent.putExtra("sms_body", content);
-		startActivity(intent);
-	}
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
@@ -272,6 +197,7 @@ public class ArrangeOrderFragment extends Fragment{
 		}
 	}
 	
+	
 	public void commmitAllOrders() {
 		try {
 			JSONObject jsonObject = new JSONObject();
@@ -279,7 +205,7 @@ public class ArrangeOrderFragment extends Fragment{
 			if (dbService.loadAllOrders().size() > 0) {
 				for (AlinoneOrder alinoneOrder : dbService.loadAllOrders()) {
 					JSONObject jsonObjectInside = new JSONObject();
-					jsonObjectInside.put("order_id", alinoneOrder.getOrderID());
+					jsonObjectInside.put("order_id", String.valueOf(alinoneOrder.getOrderID()));
 					jsonArray.put(jsonObjectInside);
 				}
 				jsonObject.put("orders_id", jsonArray);
@@ -299,9 +225,11 @@ public class ArrangeOrderFragment extends Fragment{
 							JSONObject response) {
 						// TODO Auto-generated method stub
 						dbService.deleteAllOrders();
+						dbService.deleteAllDishes();
 						orderList.clear();
 						adapter.notifyDataSetChanged();
 						addOrderButton.setVisibility(View.VISIBLE);
+						Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
 					}
 					
 				});
@@ -327,6 +255,7 @@ public class ArrangeOrderFragment extends Fragment{
 						orderList.clear();
 						adapter.notifyDataSetChanged();
 						addOrderButton.setVisibility(View.VISIBLE);
+						Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
 					}
 					
 				});
@@ -344,7 +273,7 @@ public class ArrangeOrderFragment extends Fragment{
 			if (dbService.loadAllOrders().size() > 0) {
 				for (AlinoneOrder alinoneOrder : dbService.loadAllOrders()) {
 					JSONObject jsonObjectInside = new JSONObject();
-					jsonObjectInside.put("order_id", alinoneOrder.getOrderID());
+					jsonObjectInside.put("order_id", String.valueOf(alinoneOrder.getOrderID()));
 					jsonArray.put(jsonObjectInside);
 				}
 				jsonObject.put("orders_id", jsonArray);
@@ -367,6 +296,7 @@ public class ArrangeOrderFragment extends Fragment{
 						orderList.clear();
 						adapter.notifyDataSetChanged();
 						addOrderButton.setVisibility(View.VISIBLE);
+						Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
 					}
 					
 				});
@@ -390,9 +320,11 @@ public class ArrangeOrderFragment extends Fragment{
 						// TODO Auto-generated method stub
 						Log.v("qqqqqqqqqqqqqqqqqq", response.toString());
 						dbService.deleteAllOrders();
+						dbService.deleteAllDishes();
 						orderList.clear();
 						adapter.notifyDataSetChanged();
 						addOrderButton.setVisibility(View.VISIBLE);
+						Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
 					}
 				});
 			}
@@ -403,13 +335,18 @@ public class ArrangeOrderFragment extends Fragment{
 	
 	public void commitOneOrder(AlinoneOrder order) {
 		orderList.remove(order);
+		dbService.deleteDishesFromOrder(order);
 		dbService.deleteOrder(order);
 	}
 	
+	@SuppressLint("UseValueOf") 
 	public void readOrdersInfo() {
 		orderList.clear();
+		checkList.clear();
 		for (AlinoneOrder order : dbService.loadAllOrders()) {
 			orderList.add(order);
+			isMarked isMarked = new isMarked(0);
+			checkList.add(isMarked);
 		}
 		if (orderList.size() <= 0) {
 			addOrderButton.setVisibility(View.VISIBLE);
@@ -417,11 +354,8 @@ public class ArrangeOrderFragment extends Fragment{
 		else {
 			addOrderButton.setVisibility(View.GONE);
 		}
-		checkList = new int[orderList.size()];
-		adapter = new OrderListAdapter(orderList, getActivity(), checkList);
+		adapter = new OrderListAdapter(orderList, getActivity(), this, isExpanded, checkList);
 		currentOrderListView.setAdapter(adapter);
-		currentOrderListView.setOnItemLongClickListener(new OrderStatusChangeOnItemLongClickListener());
-		currentOrderListView.setOnItemClickListener(new OrdersOnItemClickListener());
 	}
 	
 	public void getBindOrders() {
@@ -445,15 +379,36 @@ public class ArrangeOrderFragment extends Fragment{
 					try {
 						if (response.get("status").toString().equals("1")) {
 							dbService.deleteAllOrders();
+							dbService.deleteAllDishes();
+							orderList.clear();
+							checkList.clear();
 							JSONArray orderArray = ((JSONObject)response.get("body")).getJSONArray("order_list");
 							for (int i = 0; i < orderArray.length(); i++) {
+								isMarked isMarked = new isMarked(0);
+								checkList.add(isMarked);
 								JSONObject orderObject = orderArray.getJSONObject(i);
-								Log.d("asdasd", orderObject.toString());
-								AlinoneOrder order = new AlinoneOrder(orderObject.get("order_id").toString(), orderObject.get("phone").toString(), orderObject.get("address").toString().trim(), orderObject.get("merchant_id").toString(), new Date());
+								JSONArray dishArray = orderObject.getJSONArray("dish_list");
+								Log.v("arrange", dishArray.toString());
+								AlinoneOrder order = new AlinoneOrder(orderObject.get("order_id").toString(), orderObject.get("phone").toString(), orderObject.get("address").toString(), orderObject.get("merchant_id").toString(), new Date(),
+										orderObject.getString("name"), orderObject.getBoolean("if_pay"), Float.valueOf(orderObject.get("price").toString()));
 								dbService.saveOrder(order);
+								orderList.add(order);
+								for (int j = 0; j < dishArray.length(); j++) {
+									JSONObject dishObject = dishArray.getJSONObject(j);
+									Dish dish = new Dish(dishObject.getString("name"), dishObject.getInt("count"), Float.valueOf(dishObject.get("price").toString()), order.getOrderID());
+									dishList.add(dish);
+								}
+								dbService.saveDishLists(dishList, order);
+								dishList.clear();
 							}
 							Toast.makeText(getActivity().getApplicationContext(), "获取已绑定订单成功", Toast.LENGTH_SHORT).show();
-							readOrdersInfo();
+							if (orderList.size() > 0) {
+								addOrderButton.setVisibility(View.GONE);
+							}
+							else {
+								addOrderButton.setVisibility(View.VISIBLE);
+							}
+							adapter.notifyDataSetChanged();
 						}
 					} catch (Exception e) {
 						// TODO: handle exception

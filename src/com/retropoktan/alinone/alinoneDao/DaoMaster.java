@@ -18,13 +18,17 @@ public class DaoMaster extends AbstractDaoMaster {
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
         AlinoneOrderDao.createTable(db, ifNotExists);
+        DishDao.createTable(db, ifNotExists);
         MerchantDao.createTable(db, ifNotExists);
+        TodayOrderDao.createTable(db, ifNotExists);
     }
     
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
         AlinoneOrderDao.dropTable(db, ifExists);
+        DishDao.dropTable(db, ifExists);
         MerchantDao.dropTable(db, ifExists);
+        TodayOrderDao.dropTable(db, ifExists);
     }
     
     public static abstract class OpenHelper extends SQLiteOpenHelper {
@@ -57,7 +61,9 @@ public class DaoMaster extends AbstractDaoMaster {
     public DaoMaster(SQLiteDatabase db) {
         super(db, SCHEMA_VERSION);
         registerDaoClass(AlinoneOrderDao.class);
+        registerDaoClass(DishDao.class);
         registerDaoClass(MerchantDao.class);
+        registerDaoClass(TodayOrderDao.class);
     }
     
     public DaoSession newSession() {
