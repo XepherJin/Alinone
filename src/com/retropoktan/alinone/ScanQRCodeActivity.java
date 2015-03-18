@@ -76,6 +76,8 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 	private boolean vibrate;
 	CameraManager cameraManager;
 	
+	private ArrayList<String> cacheQrCodeList = new ArrayList<String>();
+	
 	private ArrayList<String> qrCodeList = new ArrayList<String>();
 	
 	private ArrayList<Dish> dishList = new ArrayList<Dish>();
@@ -132,6 +134,11 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
+		
+		for (AlinoneOrder order : dbService.loadAllOrders()) {
+			cacheQrCodeList.add(order.getOrderID());
+		}
+		
 	}
 
 	@Override
@@ -369,7 +376,9 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 		//	.show();
 		//}
 		//else {
-			if (!qrCodeList.contains(string)) {
+		
+		
+			if (!qrCodeList.contains(string) && !cacheQrCodeList.contains(string)) {
 				qrCodeList.add(string);
 				Toast.makeText(getApplicationContext(), "已成功扫描订单", Toast.LENGTH_SHORT).show();
 				qrcodeTextView.setText("已成功扫描" + qrCodeList.size() + "份订单");
@@ -465,6 +474,7 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 											dbService.saveOrder(order);
 											Log.d("teset", dishList.toString());
 											dbService.saveDishLists(dishList, order);
+											dishList.clear();
 										}
 										Toast.makeText(getApplicationContext(), "绑定成功", Toast.LENGTH_SHORT).show();
 										Intent intent = new Intent(ScanQRCodeActivity.this, ArrangeOrderFragment.class);
@@ -487,11 +497,14 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 													orderObject.getString("name"), orderObject.getBoolean("if_pay"), Float.valueOf(orderObject.get("price").toString()));
 											dbService.saveOrder(order);
 											dbService.saveDishLists(dishList, order);
+											dishList.clear();
 										}
-										dishList.clear();
 										Intent intent = new Intent(ScanQRCodeActivity.this, ArrangeOrderFragment.class);
 										setResult(RESULT_CANCEL_WITHOUT_BIND_ORDERS, intent);
 										ScanQRCodeActivity.this.finish();
+									}
+									else {
+										Log.d("i am here", "fuck you");
 									}
 								} catch (Exception e) {
 									// TODO: handle exception

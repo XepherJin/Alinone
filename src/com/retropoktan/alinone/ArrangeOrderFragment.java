@@ -24,10 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,8 +47,6 @@ public class ArrangeOrderFragment extends Fragment{
 	
 	private TextView addressTextView;
 	private TextView phoneNumberTextView;
-	
-	private ImageView checkMarkImageView;
 	
 	public List<AlinoneOrder> orderList = new ArrayList<AlinoneOrder>();
 	private List<Dish> dishList;
@@ -123,7 +118,8 @@ public class ArrangeOrderFragment extends Fragment{
 	}
 	
 	public void cancelOrder(AlinoneOrder order) {
-		dbService.deleteDishesFromOrder(order);
+		List<Dish> list = order.getDishes();
+		dbService.deleteDishes(list);
 		dbService.deleteOrder(order);
 		
 	}
@@ -252,7 +248,10 @@ public class ArrangeOrderFragment extends Fragment{
 							JSONObject response) {
 						// TODO Auto-generated method stub
 						dbService.deleteAllOrders();
+						dbService.deleteAllDishes();
 						orderList.clear();
+						checkList.clear();
+						dishList.clear();
 						adapter.notifyDataSetChanged();
 						addOrderButton.setVisibility(View.VISIBLE);
 						Toast.makeText(getActivity().getApplicationContext(), "已完成本次派送任务", Toast.LENGTH_SHORT).show();
@@ -335,7 +334,8 @@ public class ArrangeOrderFragment extends Fragment{
 	
 	public void commitOneOrder(AlinoneOrder order) {
 		orderList.remove(order);
-		dbService.deleteDishesFromOrder(order);
+		List<Dish> list = order.getDishes();
+		dbService.deleteDishes(list);
 		dbService.deleteOrder(order);
 	}
 	
@@ -393,13 +393,14 @@ public class ArrangeOrderFragment extends Fragment{
 										orderObject.getString("name"), orderObject.getBoolean("if_pay"), Float.valueOf(orderObject.get("price").toString()));
 								dbService.saveOrder(order);
 								orderList.add(order);
+								dishList.clear();
 								for (int j = 0; j < dishArray.length(); j++) {
 									JSONObject dishObject = dishArray.getJSONObject(j);
 									Dish dish = new Dish(dishObject.getString("name"), dishObject.getInt("count"), Float.valueOf(dishObject.get("price").toString()), order.getOrderID());
 									dishList.add(dish);
 								}
 								dbService.saveDishLists(dishList, order);
-								dishList.clear();
+								Log.d("adasdasd", dishList.toString());
 							}
 							Toast.makeText(getActivity().getApplicationContext(), "获取已绑定订单成功", Toast.LENGTH_SHORT).show();
 							if (orderList.size() > 0) {

@@ -121,8 +121,8 @@ public class DBService {
 				// TODO Auto-generated method stub
 				for (int i = 0; i < list.size(); i++) {
 					Dish dish = list.get(i);
-					dish.setOrderId(order.getOrderID());
-					dishDao.insert(dish);
+					dish.setAlinoneOrder(order);
+					dishDao.insertOrReplace(dish);
 				}
 			}
 		});
@@ -132,8 +132,20 @@ public class DBService {
 		mDaoSession.delete(dish);
 	}
 	
-	public void deleteDishesFromOrder(AlinoneOrder order) {
-		order.resetDishes();
+	public void deleteDishes(final List<Dish> list) {
+		if (list == null ||list.isEmpty()) {
+			return;
+		}
+		dishDao.getSession().runInTx(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				for (Dish dish : list) {
+					dish.delete();
+				}
+			}
+		});
 	}
 	
 	public void deleteAllDishes() {

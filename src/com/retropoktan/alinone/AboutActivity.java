@@ -10,6 +10,8 @@ import com.retropoktan.alinone.netutil.HttpUtil;
 import com.retropoktan.alinone.netutil.URLConstants;
 
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,6 +51,13 @@ public class AboutActivity extends Activity{
 		verifyPasswordChangeEditText = (EditText)findViewById(R.id.verify_password_to_change_from_about);
 		changePasswordButton = (Button)findViewById(R.id.change_new_password_from_about_button);
 		changePasswordChart = (LinearLayout)findViewById(R.id.change_password_chart);
+		try {
+			PackageManager manager = getPackageManager();
+			PackageInfo packageInfo = manager.getPackageInfo(getPackageName(), 0);
+			versionTextView.setText("V " + packageInfo.versionName);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		checkForUpdate.setOnClickListener(new OnClickListener() { 
 			// check for update
 			

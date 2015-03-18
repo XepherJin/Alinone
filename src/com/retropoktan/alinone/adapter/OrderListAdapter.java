@@ -106,6 +106,7 @@ public class OrderListAdapter extends BaseAdapter{
 			}
 			detailDish.delete(detailDish.length() - 1, detailDish.length());
 			viewHolder.dishTextView.setText(detailDish);
+			detailDish.delete(0, detailDish.length() - 1);
 		}
 		if (!order.getPaid()) {
 			viewHolder.whetherPaidTextView.setText(Html.fromHtml("<font color=\'#ff0000\'>(未付)" + String.valueOf(order.getPrice()) + "元</font>"));
