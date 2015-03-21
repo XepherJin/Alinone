@@ -31,6 +31,10 @@ public class DBService {
 		return instance;
 	}
 	
+	public MerchantDao getMerchantDao() {
+		return instance.merchantDao;
+	}
+	
 	public List<AlinoneOrder> loadAllOrders() {
 		return AlinoneOrderDao.loadAll();
 	}

@@ -20,4 +20,5 @@ public class URLConstants {
 	public static final String ChangePasswordUrl = ApiUrl + "/sender/change_password";
 	public static final String GetBindOrdersUrl = ApiUrl + "/sender/get_bind_orders";
 	public static final String ContentTypeJson = "application/json";
+	public static final String GetPreOrdersUrl = ApiUrl + "/sender/get_pre_orders";
 }

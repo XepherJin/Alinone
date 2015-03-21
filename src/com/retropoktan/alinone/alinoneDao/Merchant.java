@@ -16,6 +16,7 @@ public class Merchant {
     /** Not-null value. */
     private String merchantName;
     private int orderNum;
+    private int preOrderNum;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -32,10 +33,11 @@ public class Merchant {
         this.merchantID = merchantID;
     }
 
-    public Merchant(String merchantID, String merchantName, int orderNum) {
+    public Merchant(String merchantID, String merchantName, int orderNum, int preOrderNum) {
         this.merchantID = merchantID;
         this.merchantName = merchantName;
         this.orderNum = orderNum;
+        this.preOrderNum = preOrderNum;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -70,6 +72,14 @@ public class Merchant {
 
     public void setOrderNum(int orderNum) {
         this.orderNum = orderNum;
+    }
+
+    public int getPreOrderNum() {
+        return preOrderNum;
+    }
+
+    public void setPreOrderNum(int preOrderNum) {
+        this.preOrderNum = preOrderNum;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

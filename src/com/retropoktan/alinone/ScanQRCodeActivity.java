@@ -11,7 +11,6 @@ import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -547,7 +546,7 @@ public class ScanQRCodeActivity extends Activity implements Callback {
 										JSONObject merchantObject = (JSONObject)response.get("body");
 										Log.d("one merchant", merchantObject.toString());
 										Toast.makeText(getApplicationContext(), "绑定成功", Toast.LENGTH_SHORT).show();
-										dbService.saveMerchant(new Merchant(merchantObject.get("merchant_id").toString(), merchantObject.get("merchant_name").toString(), 0));
+										dbService.saveMerchant(new Merchant(merchantObject.get("merchant_id").toString(), merchantObject.get("merchant_name").toString(), 0, 0));
 										Intent intent = new Intent(ScanQRCodeActivity.this, PersonCenterFragment.class);
 										setResult(RESULT_OK, intent);
 										ScanQRCodeActivity.this.finish();

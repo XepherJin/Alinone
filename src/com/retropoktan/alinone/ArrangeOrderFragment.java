@@ -334,8 +334,6 @@ public class ArrangeOrderFragment extends Fragment{
 	
 	public void commitOneOrder(AlinoneOrder order) {
 		orderList.remove(order);
-		List<Dish> list = order.getDishes();
-		dbService.deleteDishes(list);
 		dbService.deleteOrder(order);
 	}
 	

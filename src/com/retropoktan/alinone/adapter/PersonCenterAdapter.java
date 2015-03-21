@@ -1,6 +1,5 @@
 package com.retropoktan.alinone.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.retropoktan.alinone.PersonCenterFragment.OnRefreshTodayOrder;
 import com.retropoktan.alinone.R;
 import com.retropoktan.alinone.alinoneDao.Merchant;
 import com.retropoktan.alinone.qrcode.view.AlinoneListView;
@@ -21,7 +19,7 @@ public class PersonCenterAdapter extends BaseAdapter{
 	public List<Merchant> merchantListData;
 	public LayoutInflater inflater;
 	private Context mContext;
-
+	
 	public List<Merchant> getMerchantListData() {
 		return merchantListData;
 	}
@@ -75,10 +73,10 @@ public class PersonCenterAdapter extends BaseAdapter{
 			if (!merchant.getTodayDishes().isEmpty()) {
 				holder.listView.setAdapter(new TodayOrderAdapter(merchant.getTodayDishes(), mContext));
 				holder.orderNumTextView.setVisibility(View.GONE);
-				holder.merchantNameTextView.setText(merchant.getMerchantName() + "(今日共派送" + merchant.getTodayDishes().size() + "单)");
+				holder.merchantNameTextView.setText(merchant.getMerchantName() + "(今日已派送" + merchant.getTodayDishes().size() + "单,尚余" + merchant.getPreOrderNum() + "单)");
 			}
 			else {
-				holder.merchantNameTextView.setText(merchant.getMerchantName());
+				holder.merchantNameTextView.setText(merchant.getMerchantName() + "(今日已派送0单,尚余" + merchant.getPreOrderNum() + "单)");
 				holder.orderNumTextView.setVisibility(View.VISIBLE);
 			}
 		}

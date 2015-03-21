@@ -36,6 +36,23 @@ public class TodayOrder {
     public TodayOrder(String orderId) {
         this.orderId = orderId;
     }
+    
+    public String getPlatFormName() {
+    	switch (platform) {
+		case 1:
+			return "淘点点";
+		case 2:
+			return "饿了么";
+		case 3:
+			return "美团外卖";
+		case 10:
+			return "电话订单";
+		case 11:
+			return "其他平台";
+		default:
+			return "未知";
+		}
+    }
 
     public TodayOrder(String orderId, Integer platform, Boolean isPaid, String phone, Float price, String time, Integer platformNum, String merchantId) {
         this.orderId = orderId;
@@ -67,23 +84,6 @@ public class TodayOrder {
     public Integer getPlatform() {
         return platform;
     }
-    
-    public String getPlatFormName() {
-    	switch (getPlatform()) {
-		case 1:
-			return "淘点点";
-		case 2:
-			return "饿了么";
-		case 3:
-			return "美团外卖";
-		case 10:
-			return "电话订单";
-		case 11:
-			return "其他平台";
-		default:
-			return "未知";
-		}
-    }
 
     public void setPlatform(Integer platform) {
         this.platform = platform;
@@ -114,7 +114,7 @@ public class TodayOrder {
     }
 
     public String getTime() {
-        return new String(time.substring(0, 19));
+        return time;
     }
 
     public void setTime(String time) {

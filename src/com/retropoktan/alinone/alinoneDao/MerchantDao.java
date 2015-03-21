@@ -23,6 +23,7 @@ public class MerchantDao extends AbstractDao<Merchant, String> {
         public final static Property MerchantID = new Property(0, String.class, "merchantID", true, "MERCHANT_ID");
         public final static Property MerchantName = new Property(1, String.class, "merchantName", false, "MERCHANT_NAME");
         public final static Property OrderNum = new Property(2, int.class, "orderNum", false, "ORDER_NUM");
+        public final static Property PreOrderNum = new Property(3, int.class, "preOrderNum", false, "PRE_ORDER_NUM");
     };
 
     private DaoSession daoSession;
@@ -43,7 +44,8 @@ public class MerchantDao extends AbstractDao<Merchant, String> {
         db.execSQL("CREATE TABLE " + constraint + "'MERCHANT' (" + //
                 "'MERCHANT_ID' TEXT PRIMARY KEY NOT NULL ," + // 0: merchantID
                 "'MERCHANT_NAME' TEXT NOT NULL ," + // 1: merchantName
-                "'ORDER_NUM' INTEGER NOT NULL );"); // 2: orderNum
+                "'ORDER_NUM' INTEGER NOT NULL ," + // 2: orderNum
+                "'PRE_ORDER_NUM' INTEGER NOT NULL );"); // 3: preOrderNum
     }
 
     /** Drops the underlying database table. */
@@ -59,6 +61,7 @@ public class MerchantDao extends AbstractDao<Merchant, String> {
         stmt.bindString(1, entity.getMerchantID());
         stmt.bindString(2, entity.getMerchantName());
         stmt.bindLong(3, entity.getOrderNum());
+        stmt.bindLong(4, entity.getPreOrderNum());
     }
 
     @Override
@@ -79,7 +82,8 @@ public class MerchantDao extends AbstractDao<Merchant, String> {
         Merchant entity = new Merchant( //
             cursor.getString(offset + 0), // merchantID
             cursor.getString(offset + 1), // merchantName
-            cursor.getInt(offset + 2) // orderNum
+            cursor.getInt(offset + 2), // orderNum
+            cursor.getInt(offset + 3) // preOrderNum
         );
         return entity;
     }
@@ -90,6 +94,7 @@ public class MerchantDao extends AbstractDao<Merchant, String> {
         entity.setMerchantID(cursor.getString(offset + 0));
         entity.setMerchantName(cursor.getString(offset + 1));
         entity.setOrderNum(cursor.getInt(offset + 2));
+        entity.setPreOrderNum(cursor.getInt(offset + 3));
      }
     
     /** @inheritdoc */

@@ -10,14 +10,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.Manifest.permission;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,9 +36,10 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.retropoktan.alinone.adapter.PersonCenterAdapter;
-import com.retropoktan.alinone.adapter.TodayOrderAdapter;
 import com.retropoktan.alinone.alinoneDao.DBService;
 import com.retropoktan.alinone.alinoneDao.Merchant;
+import com.retropoktan.alinone.alinoneDao.MerchantDao;
+import com.retropoktan.alinone.alinoneDao.MerchantDao.Properties;
 import com.retropoktan.alinone.alinoneDao.TodayOrder;
 import com.retropoktan.alinone.netutil.HttpUtil;
 import com.retropoktan.alinone.netutil.URLConstants;
@@ -56,9 +57,90 @@ public class PersonCenterFragment extends Fragment{
 	
 	private Context context;
 	
+	public static final int REFRESH_PREORDERS = 1;
+	
 	private List<Merchant> merchantList;
 	private List<TodayOrder> todayOrderList;
 	private int REQUEST_CODE = 1;
+	private Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			switch (msg.what) {
+			case 1:
+				try {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+					StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+					HttpUtil.post(context, URLConstants.GetPreOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+						@Override
+						public void onFailure(int statusCode, Header[] headers,
+								String responseString, Throwable throwable) {
+							// TODO Auto-generated method stub
+							super.onFailure(statusCode, headers, responseString, throwable);
+						}
+
+						@Override
+						public void onSuccess(int statusCode, Header[] headers,
+								JSONObject response) {
+							// TODO Auto-generated method stub
+							try {
+								if (response.get("status").toString().equals("1")) {
+									JSONArray jsonArray = ((JSONObject)response.get("body")).getJSONArray("merchants");
+									for (int i = 0; i < jsonArray.length(); i++) {
+										JSONObject preObject = jsonArray.getJSONObject(i);
+										List<Merchant> list = dbService.getMerchantDao().queryBuilder().where(Properties.MerchantID.eq(preObject.getString("merchant_id"))).list();
+										Log.d("preorder", list.toString());
+										if (!list.isEmpty()) {
+											Merchant merchant = list.get(0);
+											merchant.setPreOrderNum(preObject.getInt("count"));
+											dbService.saveMerchant(merchant);
+										}
+									}
+									merchantListView.setAdapter(adapter);
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+					});
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		
+	};
+	
+	private void startGetPreOrders() {
+		stopGetPreOrders();
+		mHandler.postDelayed(getPreOrdersTask, 10000);
+	}
+	
+	private void stopGetPreOrders() {
+		mHandler.removeCallbacks(getPreOrdersTask);
+	}
+	
+	private Runnable getPreOrdersTask = new Runnable() {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			mHandler.sendEmptyMessage(REFRESH_PREORDERS);
+			startGetPreOrders();
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -243,7 +325,7 @@ public class PersonCenterFragment extends Fragment{
 								JSONArray sendedJsonArray = jsonObject.getJSONArray("sended");
 								Log.v("teset", sendedJsonArray.toString());
 								todayOrderList.clear();
-								Merchant merchant = new Merchant(jsonObject.get("merchant_id").toString(), jsonObject.get("merchant_name").toString(), sendedJsonArray.length());
+								Merchant merchant = new Merchant(jsonObject.get("merchant_id").toString(), jsonObject.get("merchant_name").toString(), sendedJsonArray.length(), 0);
 								merchantList.add(merchant);
 								dbService.saveMerchant(merchant);
 								getTodayOrder(sendedJsonArray, todayOrderList, merchant);
@@ -256,6 +338,53 @@ public class PersonCenterFragment extends Fragment{
 							}
 							adapter.setMerchantListData(merchantList);
 							merchantListView.setAdapter(adapter);
+							try {
+								JSONObject jsonObject = new JSONObject();
+								jsonObject.put("private_token", BaseApplication.getInstance().getToken());
+								StringEntity stringEntity = new StringEntity(String.valueOf(jsonObject));
+								HttpUtil.post(context, URLConstants.GetPreOrdersUrl, stringEntity, URLConstants.ContentTypeJson, new JsonHttpResponseHandler(){
+
+									@Override
+									public void onFailure(int statusCode, Header[] headers,
+											String responseString, Throwable throwable) {
+										// TODO Auto-generated method stub
+										super.onFailure(statusCode, headers, responseString, throwable);
+									}
+
+									@Override
+									public void onSuccess(int statusCode, Header[] headers,
+											JSONObject response) {
+										// TODO Auto-generated method stub
+										try {
+											if (response.get("status").toString().equals("1")) {
+												JSONArray jsonArray = ((JSONObject)response.get("body")).getJSONArray("merchants");
+												for (int i = 0; i < jsonArray.length(); i++) {
+													JSONObject preObject = jsonArray.getJSONObject(i);
+													List<Merchant> list = dbService.getMerchantDao().queryBuilder().where(Properties.MerchantID.eq(preObject.getString("merchant_id"))).list();
+													Log.d("preorder", list.toString());
+													if (!list.isEmpty()) {
+														Merchant merchant = list.get(0);
+														merchant.setPreOrderNum(preObject.getInt("count"));
+														dbService.saveMerchant(merchant);
+													}
+												}
+												merchantListView.setAdapter(adapter);
+											}
+										} catch (JSONException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+									
+								});
+							} catch (UnsupportedEncodingException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							startGetPreOrders();
 						}
 						else {
 							Toast.makeText(context, "获取信息失败", Toast.LENGTH_SHORT).show();
@@ -272,6 +401,22 @@ public class PersonCenterFragment extends Fragment{
 		}
 	}
 	
+	
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		startGetPreOrders();
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		stopGetPreOrders();
+	}
+
 	private void readMerchantInfo() {
 		for (Merchant merchant : dbService.loadAllMerchants()) {
 			merchantList.add(merchant);
